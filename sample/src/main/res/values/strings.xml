@@ -1,0 +1,6 @@
+<resources tools="override">
+    <string name="app_name">HijriDatePicker</string>
+    <string name="select_date">Select Date</string>
+    <string name="ok">OK</string>
+    <string name="select_date_range">Select Date Range</string>
+</resources>

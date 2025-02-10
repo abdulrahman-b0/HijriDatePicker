@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string msgid="8166741421776570875" name="date_input_headline">"التاريخ الذي تم إدخاله"</string>
+    <string msgid="229313757840775812" name="date_input_headline_description">"‏التاريخ الذي تم إدخاله: %1$s"</string>
+    <string msgid="6116910750161463197" name="date_input_invalid_for_pattern">"‏لا يتوافق التاريخ مع النمط المتوقَّع: %1$s"</string>
+    <string msgid="2521768508935305279" name="date_input_invalid_not_allowed">"‏التاريخ غير مسموح به: %1$s"</string>
+    <string msgid="7052898923934555305" name="date_input_invalid_year_range">"‏التاريخ خارج نطاق السنوات المتوقَّع: ‎%1$s - %2$s"</string>
+    <string msgid="2895559812010326913" name="date_input_label">"التاريخ"</string>
+    <string msgid="1237013946323089826" name="date_input_no_input_description">"بدون تاريخ"</string>
+    <string msgid="7306227249789210568" name="date_input_title">"اختيار تاريخ"</string>
+    <string msgid="7605002211875882969" name="date_picker_headline">"التاريخ المحدَّد"</string>
+    <string msgid="3664277305226978227" name="date_picker_headline_description">"‏الاختيار الحالي: %1$s"</string>
+    <string msgid="8436650776581492840" name="date_picker_navigate_to_year_description">"‏الانتقال إلى سنة %1$s"</string>
+    <string msgid="5811000998184572395" name="date_picker_no_selection_description">"بدون تاريخ"</string>
+    <string msgid="7813882352367152251" name="date_picker_scroll_to_earlier_years">"انتقِل للأسفل أو للأعلى لإظهار السنوات السابقة."</string>
+    <string msgid="5727367015496556177" name="date_picker_scroll_to_later_years">"انتقِل للأسفل أو للأعلى لإظهار السنوات التالية."</string>
+    <string msgid="1804346892470238807" name="date_picker_switch_to_calendar_mode">"التبديل إلى وضع \"الإدخال في التقويم\""</string>
+    <string msgid="395627960681594326" name="date_picker_switch_to_day_selection">"مرِّر سريعًا لتحديد سنة، أو انقر للرجوع إلى تحديد يوم."</string>
+    <string msgid="2219746470065162704" name="date_picker_switch_to_input_mode">"التبديل إلى \"وضع إدخال النص\""</string>
+    <string msgid="7142101321095356500" name="date_picker_switch_to_next_month">"التغيير إلى الشهر التالي"</string>
+    <string msgid="228438865139394590" name="date_picker_switch_to_previous_month">"التغيير إلى الشهر السابق"</string>
+    <string msgid="791651718641787594" name="date_picker_switch_to_year_selection">"التبديل لاختيار سنة"</string>
+    <string msgid="7430790972741451689" name="date_picker_title">"اختيار تاريخ"</string>
+    <string msgid="3199387177749801575" name="date_picker_today_description">"اليوم"</string>
+    <string msgid="2068382232816991922" name="date_picker_year_picker_pane_title">"أداة اختيار السنوات مرئية"</string>
+    <string msgid="3190049423327661366" name="date_range_input_invalid_range_input">"إدخال نطاق زمني غير صالح"</string>
+    <string msgid="3148384720560189467" name="date_range_input_title">"إدخال التواريخ"</string>
+    <string msgid="2138321128465719402" name="date_range_picker_day_in_range">"في النطاق"</string>
+    <string msgid="4947636797751277713" name="date_range_picker_end_headline">"تاريخ الانتهاء"</string>
+    <string msgid="602077859540990149" name="date_range_picker_scroll_to_next_month">"انتقِل للأسفل أو للأعلى لإظهار الشهر التالي."</string>
+    <string msgid="4592174524846109496" name="date_range_picker_scroll_to_previous_month">"انتقِل للأسفل أو للأعلى لإظهار الشهر السابق."</string>
+    <string msgid="4665981448952749820" name="date_range_picker_start_headline">"تاريخ البدء"</string>
+    <string msgid="3134165431120340385" name="date_range_picker_title">"اختيار التواريخ"</string>
+</resources>
