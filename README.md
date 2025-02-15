@@ -110,7 +110,18 @@ if (selectDateDialogOpen) {
 
 ## Installation
 
-Add the following to your `build.gradle` file:
+This library requires Jetpack Compose and Material3 components, so make sure you have them set up in your project.
+The library also requires JDK 11 or higher to build and run the dependencies.
+
+- Add the Maven Central repository if it is not already there:
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+```
+
+Add the following to your build script:
 
 #### Kotlin DSL
 ```build.gradle.kts
