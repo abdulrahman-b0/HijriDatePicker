@@ -1,4 +1,4 @@
-<resources tools="override">
+<resources>
 
     <string name="date_input_headline">Entered date</string>
     <string name="date_input_headline_description">Entered date: %1$s</string>

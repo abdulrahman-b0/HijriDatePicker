@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -35,6 +36,9 @@ android {
 }
 
 dependencies {
+
+    implementation(libs.hijrahdatetime)
+    implementation(libs.kotlin.serialization.protobuf)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

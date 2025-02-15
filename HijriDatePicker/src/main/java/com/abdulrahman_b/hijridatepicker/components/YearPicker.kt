@@ -1,13 +1,24 @@
 package com.abdulrahman_b.hijridatepicker.components
 
+/*
+* Copyright 2023 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -15,36 +26,19 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePickerColors
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.semantics.CustomAccessibilityAction
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.ScrollAxisRange
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.customActions
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.text
-import androidx.compose.ui.semantics.verticalScrollAxisRange
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.abdulrahman_b.hijridatepicker.Strings
-import com.abdulrahman_b.hijridatepicker.getString
+import com.abdulrahman_b.hijridatepicker.R
 import com.abdulrahman_b.hijridatepicker.toLocalString
 import com.abdulrahman_b.hijridatepicker.tokens.DatePickerModalTokens
 import com.abdulrahman_b.hijridatepicker.yearContainerColor
@@ -74,9 +68,9 @@ internal fun YearPickerMenuButton(
             Icons.Filled.ArrowDropDown,
             contentDescription =
                 if (expanded) {
-                    getString(Strings.Companion.DatePickerSwitchToDaySelection)
+                    stringResource(R.string.date_picker_switch_to_day_selection)
                 } else {
-                    getString(Strings.Companion.DatePickerSwitchToYearSelection)
+                    stringResource(R.string.date_picker_switch_to_year_selection)
                 },
             Modifier.rotate(if (expanded) 180f else 0f)
         )
@@ -105,8 +99,8 @@ internal fun YearPicker(
         // Match the years container color to any elevated surface color that is composed under it.
         val containerColor = colors.containerColor
         val coroutineScope = rememberCoroutineScope()
-        val scrollToEarlierYearsLabel = getString(Strings.Companion.DatePickerScrollToShowEarlierYears)
-        val scrollToLaterYearsLabel = getString(Strings.Companion.DatePickerScrollToShowLaterYears)
+        val scrollToEarlierYearsLabel = stringResource(R.string.date_picker_scroll_to_earlier_years)
+        val scrollToLaterYearsLabel = stringResource(R.string.date_picker_scroll_to_later_years)
         LazyVerticalGrid(
             columns = GridCells.Fixed(YearsInRow),
             modifier =
@@ -159,7 +153,7 @@ internal fun YearPicker(
                     onClick = { onYearSelected(yearEntry) },
                     enabled = selectableDates.isSelectableYear(yearEntry),
                     description =
-                        getString(Strings.Companion.DatePickerNavigateToYearDescription)
+                        stringResource(R.string.date_picker_navigate_to_year_description)
                             .format(localizedYear),
                     colors = colors
                 ) {

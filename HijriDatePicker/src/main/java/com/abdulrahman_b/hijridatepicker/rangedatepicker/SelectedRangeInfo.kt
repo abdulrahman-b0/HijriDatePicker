@@ -1,7 +1,22 @@
 package com.abdulrahman_b.hijridatepicker.rangedatepicker
 
+/*
+* Copyright 2023 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.IntOffset
 import com.abdulrahman_b.hijridatepicker.calculateDaysFromStartOfWeekToFirstOfMonth
 import com.abdulrahman_b.hijridatepicker.datepicker.DAYS_IN_WEEK
@@ -14,7 +29,6 @@ import java.time.temporal.TemporalAdjusters
  * start and end dates as coordinates within the 7 x 6 calendar month grid, as well as information
  * regarding the first and last selected items.
  *
- * A SelectedRangeInfo is created when a [Month] is composed with an `rangeSelectionEnabled` flag.
  */
 internal class SelectedRangeInfo(
     val gridStartCoordinates: IntOffset,

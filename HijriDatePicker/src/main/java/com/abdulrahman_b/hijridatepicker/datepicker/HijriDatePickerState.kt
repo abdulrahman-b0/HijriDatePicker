@@ -1,75 +1,75 @@
 package com.abdulrahman_b.hijridatepicker.datepicker
 
+/*
+* Copyright 2023 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalConfiguration
-import com.abdulrahman_b.hijridatepicker.datepicker.HijriDatePickerDefaults
 import java.time.chrono.HijrahChronology
 import java.time.chrono.HijrahDate
-import java.util.Locale
 
 /**
- * A state object that can be hoisted to observe the date picker state. See
- * [rememberHijriDatePickerState].
+ * Represents the state of a Hijri date picker, which can be observed and controlled.
+ * Use [rememberHijriDatePickerState] to create and remember an instance of this state.
  */
 @ExperimentalMaterial3Api
 @Stable
 interface HijriDatePickerState {
 
     /**
-     * A timestamp that represents the selected date _start_ of the day in _UTC_ milliseconds from
-     * the epoch.
-     *
-     * @throws IllegalArgumentException in case the value is set with a timestamp that does not fall
-     *   within the [yearRange].
+     * The currently selected date, represented as a [HijrahDate].
+     * Throws [IllegalArgumentException] if the date is outside the [yearRange].
      */
-    @get:Suppress("AutoBoxing")
     var selectedDate: HijrahDate?
 
     /**
-     * A timestamp that represents the currently displayed month _start_ date in _UTC_ milliseconds
-     * from the epoch.
-     *
-     * @throws IllegalArgumentException in case the value is set with a timestamp that does not fall
-     *   within the [yearRange].
+     * The currently displayed month, represented as a [HijrahDate].
+     * Throws [IllegalArgumentException] if the date is outside the [yearRange].
      */
     var displayedMonth: HijrahDate
 
+    /**
+     * The current display mode of the date picker, either picker or input.
+     */
+    var displayMode: DisplayMode
 
-    /** A [DisplayMode] that represents the current UI mode (i.e. picker or input). */
-    val displayMode: DisplayMode //TODO: This is immutable for now, not fully supported yet.
-
-    /** An [IntRange] that holds the year range that the date picker will be limited to. */
+    /**
+     * The range of years that the date picker is limited to.
+     */
     val yearRange: IntRange
 
     /**
-     * A [SelectableDates] that is consulted to check if a date is allowed.
-     *
-     * In case a date is not allowed to be selected, it will appear disabled in the UI.
+     * Defines which dates are selectable. Disabled dates will appear grayed out in the UI.
      */
     val selectableDates: SelectableDates
 
-    val locale: Locale
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
-internal class HijriDatePickerStateImpl(
+private class HijriDatePickerStateImpl(
     initialSelectedDate: HijrahDate?,
     initialDisplayedMonth: HijrahDate,
     initialDisplayMode: DisplayMode,
     override val yearRange: IntRange,
     override val selectableDates: SelectableDates,
-    override val locale: Locale
 ) : HijriDatePickerState {
 
     override var selectedDate by mutableStateOf(initialSelectedDate)
@@ -85,7 +85,6 @@ internal class HijriDatePickerStateImpl(
 
         fun Saver(
             selectableDates: SelectableDates,
-            locale: Locale,
         ): Saver<HijriDatePickerState, *> = listSaver(
             save = {
                 listOf(
@@ -100,14 +99,13 @@ internal class HijriDatePickerStateImpl(
                 HijriDatePickerStateImpl(
                     initialSelectedDate = (value[0] as? Long)?.let(HijrahChronology.INSTANCE::dateEpochDay),
                     initialDisplayedMonth = HijrahChronology.INSTANCE.dateEpochDay(value[1] as Long),
-                    yearRange = IntRange(value[2] as Int, value[3] as Int),
                     initialDisplayMode = when ((value[4] as String)) {
                         "Picker" -> DisplayMode.Picker
                         "Input" -> DisplayMode.Input
                         else -> throw IllegalArgumentException("Invalid DisplayMode")
                     },
+                    yearRange = IntRange(value[2] as Int, value[3] as Int),
                     selectableDates = selectableDates,
-                    locale = locale
                 )
             }
         )
@@ -116,26 +114,33 @@ internal class HijriDatePickerStateImpl(
 
 }
 
+/**
+ * Creates a [HijriDatePickerState] that can be remembered across compositions.
+ *
+ * @param initialSelectedDate The initially selected date, represented as a [HijrahDate], or null if no date is selected.
+ * @param initialDisplayedMonth The initially displayed month, represented as a [HijrahDate]. Defaults to the current month.
+ * @param initialDisplayMode The initial display mode of the date picker, either picker or input. Defaults to [DisplayMode.Picker].
+ * @param yearRange The range of years that the date picker is limited to, excluded dates doesn't appear in the picker UI. Defaults to [HijriDatePickerDefaults.YearRange].
+ * @param selectableDates Defines which dates are selectable. Disabled dates will appear grayed out in the UI. Defaults to [HijriDatePickerDefaults.AllDates], which allows all dates.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun rememberHijriDatePickerState(
     initialSelectedDate: HijrahDate? = null,
     initialDisplayedMonth: HijrahDate = HijrahDate.now(),
-//    initialDisplayMode: DisplayMode = DisplayMode.Picker, //TODO, not fully supported yet.
+    initialDisplayMode: DisplayMode = DisplayMode.Picker,
     yearRange: IntRange = HijriDatePickerDefaults.YearRange,
     selectableDates: SelectableDates = HijriDatePickerDefaults.AllDates,
-    locale: Locale = LocalConfiguration.current.locales[0]
 ): HijriDatePickerState {
     return rememberSaveable(
-        saver = HijriDatePickerStateImpl.Saver(selectableDates, locale)
+        saver = HijriDatePickerStateImpl.Saver(selectableDates)
     ) {
         HijriDatePickerStateImpl(
             initialSelectedDate,
             initialDisplayedMonth,
-            DisplayMode.Picker,
+            initialDisplayMode,
             yearRange,
             selectableDates,
-            locale
         )
     }
 }

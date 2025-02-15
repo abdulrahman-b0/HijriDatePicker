@@ -1,6 +1,6 @@
 package com.abdulrahman_b.hijridatepicker
 
-import HijriDateRangePicker
+import com.abdulrahman_b.hijridatepicker.rangedatepicker.HijriDateRangePicker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,6 +33,7 @@ import com.abdulrahman_b.hijridatepicker.rangedatepicker.rememberHijriDateRangeP
 import com.abdulrahman_b.hijridatepicker.sample.R
 import com.abdulrahman_b.hijridatepicker.ui.theme.HijriDatePickerTheme
 import java.time.format.DateTimeFormatter
+import java.time.format.DecimalStyle
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +69,9 @@ fun DatePickerFormSample(
     ) {
 
         //--------------------------- Hijri Date Picker ---------------------------
-        val datePickerState = rememberHijriDatePickerState()
+        val datePickerState = rememberHijriDatePickerState(
+            yearRange = 1400..1500,
+        )
         var selectDateDialogOpen by remember {
             mutableStateOf(false)
         }
@@ -108,7 +111,7 @@ fun DatePickerFormSample(
                     )
                 },
             ) {
-                HijriDatePicker(state = datePickerState,)
+                HijriDatePicker(state = datePickerState, decimalStyle = DecimalStyle.STANDARD)
             }
         }
 
@@ -156,7 +159,7 @@ fun DatePickerFormSample(
                     )
                 },
             ) {
-                HijriDateRangePicker(state = dateRangePickerState)
+                HijriDateRangePicker(state = dateRangePickerState, decimalStyle = DecimalStyle.STANDARD)
             }
         }
 

@@ -1,22 +1,32 @@
 package com.abdulrahman_b.hijridatepicker.rangedatepicker
 
+/*
+* Copyright 2023 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalConfiguration
+import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates
 import com.abdulrahman_b.hijridatepicker.datepicker.HijriDatePickerDefaults
-import java.time.chrono.HijrahChronology
 import java.time.chrono.HijrahDate
-import java.util.Locale
 
 /**
  * A state object that can be hoisted to observe the date picker state. See
@@ -48,7 +58,7 @@ interface HijriDateRangePickerState {
 
 
     /** A [DisplayMode] that represents the current UI mode (i.e. picker or input). */
-    val displayMode: DisplayMode //TODO: This is immutable for now, not fully supported yet.
+    var displayMode: DisplayMode
 
     /** An [IntRange] that holds the year range that the date picker will be limited to. */
     val yearRange: IntRange
@@ -60,7 +70,6 @@ interface HijriDateRangePickerState {
      */
     val selectableDates: SelectableDates
 
-    val locale: Locale
 }
 
 
@@ -72,7 +81,6 @@ internal class HijriDateRangePickerStateImpl(
     initialDisplayMode: DisplayMode,
     override val yearRange: IntRange,
     override val selectableDates: SelectableDates,
-    override val locale: Locale
 ) : HijriDateRangePickerState {
 
     override var selectedStartDate by mutableStateOf(initialSelectedStartDate)
@@ -89,7 +97,6 @@ internal class HijriDateRangePickerStateImpl(
 
         fun Saver(
             selectableDates: SelectableDates,
-            locale: Locale,
         ): Saver<HijriDateRangePickerState, *> = listSaver(
             save = {
                 listOf(
@@ -103,9 +110,9 @@ internal class HijriDateRangePickerStateImpl(
             },
             restore = { value ->
                 HijriDateRangePickerStateImpl(
-                    initialSelectedStartDate = (value[0] as? Long)?.let(HijrahChronology.INSTANCE::dateEpochDay),
-                    initialSelectedEndDate = (value[1] as? Long)?.let(HijrahChronology.INSTANCE::dateEpochDay),
-                    initialDisplayedMonth = HijrahChronology.INSTANCE.dateEpochDay(value[2] as Long),
+                    initialSelectedStartDate = (value[0] as? Long)?.let(HijrahDates::ofEpochDay),
+                    initialSelectedEndDate = (value[1] as? Long)?.let(HijrahDates::ofEpochDay),
+                    initialDisplayedMonth = HijrahDates.ofEpochDay(value[2] as Long),
                     yearRange = IntRange(value[3] as Int, value[4] as Int),
                     initialDisplayMode = when ((value[5] as String)) {
                         "Picker" -> DisplayMode.Picker
@@ -113,7 +120,6 @@ internal class HijriDateRangePickerStateImpl(
                         else -> throw IllegalArgumentException("Invalid DisplayMode")
                     },
                     selectableDates = selectableDates,
-                    locale = locale
                 )
             }
         )
@@ -128,22 +134,20 @@ fun rememberHijriDateRangePickerState(
     initialSelectedStartDate: HijrahDate? = null,
     initialSelectedEndDate: HijrahDate? = null,
     initialDisplayedMonth: HijrahDate = HijrahDate.now(),
-//    initialDisplayMode: DisplayMode = DisplayMode.Picker, //TODO, not fully supported yet.
+    initialDisplayMode: DisplayMode = DisplayMode.Picker,
     yearRange: IntRange = HijriDatePickerDefaults.YearRange,
     selectableDates: SelectableDates = HijriDatePickerDefaults.AllDates,
-    locale: Locale = LocalConfiguration.current.locales[0]
 ): HijriDateRangePickerState {
     return rememberSaveable(
-        saver = HijriDateRangePickerStateImpl.Saver(selectableDates, locale)
+        saver = HijriDateRangePickerStateImpl.Saver(selectableDates)
     ) {
         HijriDateRangePickerStateImpl(
             initialSelectedStartDate,
             initialSelectedEndDate,
             initialDisplayedMonth,
-            DisplayMode.Picker,
+            initialDisplayMode,
             yearRange,
             selectableDates,
-            locale
         )
     }
 }

@@ -1,5 +1,21 @@
 package com.abdulrahman_b.hijridatepicker.rangedatepicker
 
+/*
+* Copyright 2023 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.DisplayMode
@@ -9,18 +25,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.unit.dp
+import com.abdulrahman_b.hijridatepicker.LocalPickerDecimalStyle
 import com.abdulrahman_b.hijridatepicker.LocalPickerFormatter
 import com.abdulrahman_b.hijridatepicker.LocalPickerLocale
-import com.abdulrahman_b.hijridatepicker.Strings
-import com.abdulrahman_b.hijridatepicker.getString
+import com.abdulrahman_b.hijridatepicker.R
 import java.time.chrono.HijrahDate
 
-/** Contains default values used by the [DateRangePicker]. */
+/** Contains default values used by the [HijriDateRangePicker]. */
 @ExperimentalMaterial3Api
 @Stable
 object HijriDateRangePickerDefaults {
@@ -36,10 +53,10 @@ object HijriDateRangePickerDefaults {
     fun DateRangePickerTitle(displayMode: DisplayMode, modifier: Modifier = Modifier) {
         when (displayMode) {
             DisplayMode.Picker ->
-                Text(getString(string = Strings.DateRangePickerTitle), modifier = modifier)
+                Text(stringResource(R.string.date_range_picker_title), modifier = modifier)
 
             DisplayMode.Input ->
-                Text(getString(string = Strings.DateRangeInputTitle), modifier = modifier)
+                Text((stringResource(R.string.date_range_input_title)), modifier = modifier)
         }
     }
 
@@ -61,8 +78,8 @@ object HijriDateRangePickerDefaults {
         displayMode: DisplayMode,
         modifier: Modifier = Modifier
     ) {
-        val startDateText = getString(Strings.DateRangePickerStartHeadline)
-        val endDateText = getString(Strings.DateRangePickerEndHeadline)
+        val startDateText = stringResource(R.string.date_range_picker_start_headline)
+        val endDateText = stringResource(R.string.date_range_picker_end_headline)
         DateRangePickerHeadline(
             selectedStartDate = selectedStartDate,
             selectedEndDate = selectedEndDate,
@@ -112,22 +129,24 @@ object HijriDateRangePickerDefaults {
         datesDelimiter: @Composable () -> Unit,
     ) {
         val defaultLocale = LocalPickerLocale.current
+        val decimalStyle = LocalPickerDecimalStyle.current
         val dateFormatter = LocalPickerFormatter.current
         val formatterStartDate =
-            dateFormatter.formatDate(date = selectedStartDate, locale = defaultLocale)
+            dateFormatter.formatDate(selectedStartDate, defaultLocale, decimalStyle)
 
         val formatterEndDate =
-            dateFormatter.formatDate(date = selectedEndDate, locale = defaultLocale)
+            dateFormatter.formatDate(selectedEndDate, defaultLocale, decimalStyle)
 
         val verboseStartDateDescription =
             dateFormatter.formatDate(
                 date = selectedStartDate,
                 locale = defaultLocale,
+                decimalStyle = decimalStyle,
                 forContentDescription = true
             )
                 ?: when (displayMode) {
-                    DisplayMode.Picker -> getString(Strings.DatePickerNoSelectionDescription)
-                    DisplayMode.Input -> getString(Strings.DateInputNoInputDescription)
+                    DisplayMode.Picker -> stringResource(R.string.date_picker_no_selection_description)
+                    DisplayMode.Input -> stringResource(R.string.date_input_no_input_description)
                     else -> ""
                 }
 
@@ -135,11 +154,12 @@ object HijriDateRangePickerDefaults {
             dateFormatter.formatDate(
                 date = selectedEndDate,
                 locale = defaultLocale,
+                decimalStyle = decimalStyle,
                 forContentDescription = true
             )
                 ?: when (displayMode) {
-                    DisplayMode.Picker -> getString(Strings.DatePickerNoSelectionDescription)
-                    DisplayMode.Input -> getString(Strings.DateInputNoInputDescription)
+                    DisplayMode.Picker -> stringResource(R.string.date_picker_no_selection_description)
+                    DisplayMode.Input -> stringResource(R.string.date_input_no_input_description)
                     else -> ""
                 }
 

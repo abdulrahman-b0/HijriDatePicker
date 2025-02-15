@@ -1,4 +1,4 @@
-/*
+package com.abdulrahman_b.hijridatepicker.rangedatepicker/*
  * Copyright 2023 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,73 +28,55 @@ import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.ContentDrawScope
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.abdulrahman_b.hijridatepicker.HijriDatePickerFormatter
-import com.abdulrahman_b.hijridatepicker.HijriSelectableDates
-import com.abdulrahman_b.hijridatepicker.LocalPickerFormatter
-import com.abdulrahman_b.hijridatepicker.LocalPickerLocale
-import com.abdulrahman_b.hijridatepicker.Strings
-import com.abdulrahman_b.hijridatepicker.calculateDateFromPage
-import com.abdulrahman_b.hijridatepicker.calculatePageFromDate
-import com.abdulrahman_b.hijridatepicker.calculateTotalPages
+import com.abdulrahman_b.hijridatepicker.*
+import com.abdulrahman_b.hijridatepicker.R.string.date_range_picker_scroll_to_next_month
+import com.abdulrahman_b.hijridatepicker.R.string.date_range_picker_scroll_to_previous_month
 import com.abdulrahman_b.hijridatepicker.components.DatePickerAnimatedContent
 import com.abdulrahman_b.hijridatepicker.components.Month
 import com.abdulrahman_b.hijridatepicker.components.WeekDays
 import com.abdulrahman_b.hijridatepicker.components.updateDisplayedMonth
-import com.abdulrahman_b.hijridatepicker.datepicker.DAYS_IN_WEEK
-import com.abdulrahman_b.hijridatepicker.datepicker.DateEntryContainer
-import com.abdulrahman_b.hijridatepicker.datepicker.DatePickerHorizontalPadding
-import com.abdulrahman_b.hijridatepicker.datepicker.DatePickerModeTogglePadding
-import com.abdulrahman_b.hijridatepicker.datepicker.DisplayModeToggleButton
-import com.abdulrahman_b.hijridatepicker.datepicker.HijriDatePickerDefaults
-import com.abdulrahman_b.hijridatepicker.datepicker.RecommendedSizeForAccessibility
-import com.abdulrahman_b.hijridatepicker.getString
-import com.abdulrahman_b.hijridatepicker.rangedatepicker.HijriDateRangePickerDefaults
-import com.abdulrahman_b.hijridatepicker.rangedatepicker.HijriDateRangePickerState
-import com.abdulrahman_b.hijridatepicker.rangedatepicker.SelectedRangeInfo
+import com.abdulrahman_b.hijridatepicker.datepicker.*
 import com.abdulrahman_b.hijridatepicker.tokens.DatePickerModalTokens
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
 import java.time.chrono.HijrahDate
-
+import java.time.format.DecimalStyle
+import java.util.*
 /**
- * <a href="https://m3.material.io/components/date-pickers/overview" class="external"
- * target="_blank">Material Design date range picker</a>.
+ * HijriDateRangePicker is a composable function that provides a date range picker for selecting a range of dates
+ * in the Hijri calendar system. It can be embedded into various UI components and supports customization.
  *
- * Date range pickers let people select a range of dates and can be embedded into Dialogs.
+ * The date range picker allows users to select a start date and an end date, and it provides visual feedback
+ * for the selected range. It also supports input mode for manual date entry.
  *
- * ![Date range picker
- * image](https://developer.android.com/images/reference/androidx/compose/material3/range-picker.png)
- *
- * A simple DateRangePicker looks like:
- *
- * @sample androidx.compose.material3.samples.DateRangePickerSample
- *
- * @param state state of the date range picker. See [rememberDateRangePickerState].
- * @param modifier the [Modifier] to be applied to this date range picker
- * @param dateFormatter a [DatePickerFormatter] that provides formatting skeletons for dates display
- * @param title the title to be displayed in the date range picker
- * @param headline the headline to be displayed in the date range picker
- * @param showModeToggle indicates if this DateRangePicker should show a mode toggle action that
- *   transforms it into a date range input
- * @param colors [DatePickerColors] that will be used to resolve the colors used for this date range
- *   picker in different states. See [DatePickerDefaults.colors].
+ * @param state The state of the date range picker, which holds the current selection and display mode. See [rememberHijriDateRangePickerState].
+ * @param modifier The [Modifier] to be applied to this date range picker.
+ * @param dateFormatter A [DatePickerFormatter] that provides formatting skeletons for dates display. Defaults to [HijriDatePickerDefaults.dateFormatter].
+ * @param title A composable function that defines the title to be displayed in the date range picker. Defaults to a standard title.
+ * @param headline A composable function that defines the headline to be displayed in the date range picker. Defaults to a standard headline.
+ * @param firstDayOfWeek The first day of the week to be displayed in the calendar. Defaults to [DayOfWeek.SATURDAY].
+ * @param locale The locale to be used for formatting dates. Defaults to the current locale.
+ * @param decimalStyle The decimal style to be used for formatting dates. Defaults to the decimal style of the current locale.
+ * @param showModeToggle Indicates if this DateRangePicker should show a mode toggle action that transforms it into a date range input. Defaults to true.
+ * @param colors [DatePickerColors] that will be used to resolve the colors used for this date range picker in different states. Defaults to [DatePickerDefaults.colors].
  */
-@ExperimentalMaterial3Api
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HijriDateRangePicker(
     state: HijriDateRangePickerState,
@@ -114,11 +96,12 @@ fun HijriDateRangePicker(
             modifier = Modifier.padding(DateRangePickerHeadlinePadding)
         )
     },
-//    showModeToggle: Boolean = true,
+    firstDayOfWeek: DayOfWeek = DayOfWeek.SATURDAY,
+    locale: Locale = LocalConfiguration.current.locales[0],
+    decimalStyle: DecimalStyle = DecimalStyle.of(locale),
+    showModeToggle: Boolean = true,
     colors: DatePickerColors = DatePickerDefaults.colors()
 ) {
-
-    val showModeToggle = false
 
     require(dateFormatter is HijriDatePickerFormatter) {
         "The provided dateFormatter must be an instance of HijriDatePickerFormatter. Use `HijriDatePickerDefaults.dateFormatter()` to create one."
@@ -131,7 +114,9 @@ fun HijriDateRangePicker(
 
     CompositionLocalProvider(
         LocalPickerFormatter provides dateFormatter,
-        LocalPickerLocale provides state.locale
+        LocalPickerLocale provides locale,
+        LocalPickerDecimalStyle provides decimalStyle,
+        LocalFirstDayOfWeek provides firstDayOfWeek
     ) {
         DateEntryContainer(
             modifier = modifier,
@@ -143,7 +128,7 @@ fun HijriDateRangePicker(
                         DisplayModeToggleButton(
                             modifier = Modifier.padding(DatePickerModeTogglePadding),
                             displayMode = state.displayMode,
-                            onDisplayModeChange = { displayMode -> /*state.displayMode = displayMode*/ },
+                            onDisplayModeChange = { displayMode -> state.displayMode = displayMode },
                         )
                     }
                 } else {
@@ -177,7 +162,6 @@ fun HijriDateRangePicker(
 
 
 
-
 /**
  * Date entry content that displays a [DateRangePickerContent] or a [DateRangeInputContent]
  * according to the state's display mode.
@@ -196,6 +180,7 @@ private fun SwitchableDateEntryContent(
     colors: DatePickerColors
 ) {
 
+    val dateFormatter = LocalPickerFormatter.current
     DatePickerAnimatedContent(displayMode) { mode ->
         when (mode) {
             DisplayMode.Picker ->
@@ -210,17 +195,17 @@ private fun SwitchableDateEntryContent(
                     colors = colors
                 )
 
-            DisplayMode.Input -> { //TODO: Not fully supported yet.
-//                DateRangeInputContent(
-//                    selectedStartDateMillis = selectedStartDate,
-//                    selectedEndDateMillis = selectedEndDateMillis,
-//                    onDatesSelectionChange = onDatesSelectionChange,
-//                    calendarModel = calendarModel,
-//                    yearRange = yearRange,
-//                    dateFormatter = dateFormatter,
-//                    selectableDates = selectableDates,
-//                    colors = colors
-//                )
+            DisplayMode.Input -> {
+                DateRangeInputContent(
+                    selectedStartDate = selectedStartDate,
+                    selectedEndDate = selectedEndDate,
+                    onDatesSelectionChange = onDatesSelectionChange,
+                    yearRange = yearRange,
+                    selectableDates = selectableDates,
+                    colors = colors,
+                    pattern = dateFormatter.inputDateSkeleton,
+                    patternDelimiter = dateFormatter.inputDateDelimiter,
+                )
             }
         }
     }
@@ -282,9 +267,9 @@ private fun VerticalMonthsList(
     ProvideTextStyle(DatePickerModalTokens.DateLabelTextFont) {
         val coroutineScope = rememberCoroutineScope()
         val scrollToPreviousMonthLabel =
-            getString(Strings.DateRangePickerScrollToShowPreviousMonth)
+            stringResource(date_range_picker_scroll_to_previous_month)
         val scrollToNextMonthLabel =
-            getString(Strings.DateRangePickerScrollToShowNextMonth)
+            stringResource(date_range_picker_scroll_to_next_month)
 
         // The updateDateSelection will invoke the onDatesSelectionChange with the proper
         // selection according to the current state.
@@ -316,7 +301,8 @@ private fun VerticalMonthsList(
                         text =
                             dateFormatter.formatMonthYear(
                                 displayedMonth,
-                                LocalPickerLocale.current
+                                LocalPickerLocale.current,
+                                LocalPickerDecimalStyle.current
                             ) ?: "-",
                         modifier =
                             Modifier.padding(paddingValues = CalendarMonthSubheadPadding)
@@ -390,7 +376,7 @@ internal val CalendarMonthSubheadPadding = PaddingValues(start = 8.dp, top = 8.d
  * This function is called during a [Modifier.drawWithContent] call when a [Month] is composed with
  * an `rangeSelectionEnabled` flag.
  */
-internal fun ContentDrawScope.drawRangeBackground(
+internal fun DrawScope.drawRangeBackground(
     selectedRangeInfo: SelectedRangeInfo,
     color: Color
 ) {
@@ -429,9 +415,10 @@ internal fun ContentDrawScope.drawRangeBackground(
     }
 
     // Draw the first row background
-    drawRect(
+    drawRoundRect(
         color = color,
         topLeft = Offset(startX, startY),
+        cornerRadius = RectangleCornerRadius,
         size =
             Size(
                 width =
@@ -447,17 +434,19 @@ internal fun ContentDrawScope.drawRangeBackground(
     if (y1 != y2) {
         for (y in y2 - y1 - 1 downTo 1) {
             // Draw background behind the rows in between.
-            drawRect(
+            drawRoundRect(
                 color = color,
                 topLeft = Offset(0f, startY + (y * itemContainerHeight)),
+                cornerRadius = RectangleCornerRadius,
                 size = Size(width = this.size.width, height = itemStateLayerHeight)
             )
         }
         // Draw the last row selection background
         val topLeftX = if (layoutDirection == LayoutDirection.Ltr) 0f else this.size.width
-        drawRect(
+        drawRoundRect(
             color = color,
             topLeft = Offset(topLeftX, endY),
+            cornerRadius = RectangleCornerRadius,
             size =
                 Size(
                     width = if (isRtl) endX - this.size.width else endX,
@@ -503,3 +492,4 @@ private val DateRangePickerHeadlinePadding = PaddingValues(start = 24.dp, end = 
 // account when setting the header's max height.
 //private val HeaderHeightOffset = 60.dp
 private val HeaderHeightOffset = 16.dp
+private val DrawScope.RectangleCornerRadius get() = CornerRadius(8.dp.toPx(), 8.dp.toPx())

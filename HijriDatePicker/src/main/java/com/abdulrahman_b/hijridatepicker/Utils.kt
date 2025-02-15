@@ -1,23 +1,48 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
+/*
+* Copyright 2023 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 package com.abdulrahman_b.hijridatepicker
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.material3.DatePickerColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import com.abdulrahman_b.hijridatepicker.datepicker.RecommendedSizeForAccessibility
 import com.abdulrahman_b.hijridatepicker.tokens.MotionTokens
 import java.time.DayOfWeek
 import java.time.chrono.HijrahDate
+import java.time.format.DecimalStyle
 import java.time.temporal.ChronoField
+import java.util.Locale
 
 /**
  * [ProvideContentColorTextStyle]
@@ -72,7 +97,7 @@ internal fun DatePickerColors.dayContentColor(
         rememberUpdatedState(target)
     } else {
         // Animate the content color only when the day is not in a range.
-        animateColorAsState(target, tween(durationMillis = MotionTokens.DurationShort2.toInt()))
+        animateColorAsState(target, tween(durationMillis = MotionTokens.DURATION_100.toInt()))
     }
 }
 
@@ -81,7 +106,7 @@ internal fun DatePickerColors.dayContentColor(
  *
  * @param selected indicates that the color is for a selected day
  * @param enabled indicates that the day is enabled for selection
- * @param animate whether or not to animate a container color change
+ * @param animate whether to animate a container color change
  */
 @Composable
 internal fun DatePickerColors.dayContainerColor(
@@ -96,7 +121,7 @@ internal fun DatePickerColors.dayContainerColor(
             Color.Transparent
         }
     return if (animate) {
-        animateColorAsState(target, tween(durationMillis = MotionTokens.DurationShort2.toInt()))
+        animateColorAsState(target, tween(durationMillis = MotionTokens.DURATION_100.toInt()))
     } else {
         rememberUpdatedState(target)
     }
@@ -126,7 +151,7 @@ internal fun DatePickerColors.yearContentColor(
 
     return animateColorAsState(
         target,
-        tween(durationMillis = MotionTokens.DurationShort2.toInt())
+        tween(durationMillis = MotionTokens.DURATION_100.toInt())
     )
 }
 
@@ -146,7 +171,7 @@ internal fun DatePickerColors.yearContainerColor(selected: Boolean, enabled: Boo
         }
     return animateColorAsState(
         target,
-        tween(durationMillis = MotionTokens.DurationShort2.toInt())
+        tween(durationMillis = MotionTokens.DURATION_100.toInt())
     )
 }
 
@@ -185,5 +210,38 @@ internal fun calculateDaysFromStartOfWeekToFirstOfMonth(
     }
 }
 
+@Composable
+@ReadOnlyComposable
+internal fun Int.toLocalString(): String {
+    val decimalStyle = LocalPickerDecimalStyle.current
+    val locale = LocalPickerLocale.current
+    return toLocalString(locale, decimalStyle)
+}
 
-internal fun Int.toLocalString() = toString()
+internal fun Int.toLocalString(locale: Locale, decimalStyle: DecimalStyle): String {
+    val formattingLocale = if (decimalStyle == DecimalStyle.STANDARD) {
+        Locale.ENGLISH
+    } else {
+        locale
+    }
+
+    return String.format(formattingLocale, "%d", this)
+}
+
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun FlowRowScope.FillRemainingOfRow(lastItemPosition: Int, maxItemsPerRow: Int) {
+
+    val itemsCountInLastRow = lastItemPosition % maxItemsPerRow
+    val itemsToFill = (maxItemsPerRow - itemsCountInLastRow).takeUnless { itemsCountInLastRow == 0 } ?: 0
+
+    repeat(itemsToFill) {
+        Spacer(
+            modifier = Modifier.requiredSize(
+                width = RecommendedSizeForAccessibility,
+                height = RecommendedSizeForAccessibility
+            )
+        )
+    }
+}

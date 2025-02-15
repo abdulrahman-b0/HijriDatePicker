@@ -16,121 +16,68 @@
 
 package com.abdulrahman_b.hijridatepicker.datepicker
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.DatePickerColors
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerFormatter
-import androidx.compose.material3.DisplayMode
-import androidx.compose.material3.DividerDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.LiveRegionMode
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.isContainer
-import androidx.compose.ui.semantics.isTraversalGroup
-import androidx.compose.ui.semantics.liveRegion
-import androidx.compose.ui.semantics.paneTitle
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.abdulrahman_b.hijridatepicker.HijriDatePickerFormatter
-import com.abdulrahman_b.hijridatepicker.HijriSelectableDates
-import com.abdulrahman_b.hijridatepicker.LocalFirstDayOfWeek
-import com.abdulrahman_b.hijridatepicker.LocalPickerFormatter
-import com.abdulrahman_b.hijridatepicker.LocalPickerLocale
-import com.abdulrahman_b.hijridatepicker.ProvideContentColorTextStyle
-import com.abdulrahman_b.hijridatepicker.Strings
-import com.abdulrahman_b.hijridatepicker.calculatePageFromDate
-import com.abdulrahman_b.hijridatepicker.calculateTotalPages
-import com.abdulrahman_b.hijridatepicker.components.DatePickerAnimatedContent
-import com.abdulrahman_b.hijridatepicker.components.HorizontalMonthsPager
-import com.abdulrahman_b.hijridatepicker.components.MAX_CALENDAR_ROWS
-import com.abdulrahman_b.hijridatepicker.components.WeekDays
-import com.abdulrahman_b.hijridatepicker.components.YearPicker
-import com.abdulrahman_b.hijridatepicker.components.YearPickerMenuButton
-import com.abdulrahman_b.hijridatepicker.getString
+import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates.withYear
+import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates.year
+import com.abdulrahman_b.hijridatepicker.*
+import com.abdulrahman_b.hijridatepicker.components.*
 import com.abdulrahman_b.hijridatepicker.tokens.DatePickerModalTokens
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
-import java.time.chrono.HijrahChronology
 import java.time.chrono.HijrahDate
-import java.time.temporal.ChronoField
+import java.time.format.DecimalStyle
+import java.util.Locale
+import com.abdulrahman_b.hijridatepicker.R
 
 /**
- * <a href="https://m3.material.io/components/date-pickers/overview" class="external"
- * target="_blank">Material Design date picker</a>.
+ * [HijriDatePicker] is a composable function that provides a date picker component for selecting dates
+ * in the Hijri calendar. This date picker allows users to select a date via a calendar UI or switch
+ * to a date input mode for manual entry of dates using the keyboard.
  *
- * Date pickers let people select a date and preferably should be embedded into Dialogs. See
- * [DatePickerDialog].
+ * @param state The state of the date picker, which includes the selected date, displayed month,
+ *   display mode, and other relevant information. See [HijriDatePickerState].
+ * @param modifier The [Modifier] to be applied to this date picker.
+ * @param dateFormatter A [DatePickerFormatter] that provides formatting skeletons for dates display.
+ *   The default value is created using [HijriDatePickerDefaults.dateFormatter].
+ * @param firstDayOfWeek The first day of the week to be displayed in the calendar. The default value
+ *   is [DayOfWeek.SATURDAY].
+ * @param title A composable function that represents the title to be displayed in the date picker.
+ *   The default value is a title provided by [HijriDatePickerDefaults.DatePickerTitle].
+ * @param headline A composable function that represents the headline to be displayed in the date
+ *   picker. The default value is a headline provided by [HijriDatePickerDefaults.DatePickerHeadline].
+ * @param showModeToggle A boolean indicating if this DatePicker should show a mode toggle action that
+ *   transforms it into a date input. The default value is true.
+ * @param colors [DatePickerColors] that will be used to resolve the colors used for this date picker
+ *   in different states. The default value is provided by [DatePickerDefaults.colors].
+ * @param locale The locale used to format the date and day of weeks. The default value is the first locale in the current configuration.
+ * @param decimalStyle The [DecimalStyle] used to format the date. The default value is the decimal style of the provided locale.
+ * This is useful if you want to use a different decimal style than the default locale.
  *
- * By default, a date picker lets you pick a date via a calendar UI. However, it also allows
- * switching into a date input mode for a manual entry of dates using the numbers on a keyboard.
  *
- * ![Date picker
- * image](https://developer.android.com/images/reference/androidx/compose/material3/date-picker.png)
- *
- * A simple DatePicker looks like:
- *
- * @sample androidx.compose.material3.samples.DatePickerSample
- *
- * A DatePicker with an initial UI of a date input mode looks like:
- *
- * @sample androidx.compose.material3.samples.DateInputSample
- *
- * A DatePicker with a provided [SelectableDates] that blocks certain days from being selected looks
- * like:
- *
- * @sample androidx.compose.material3.samples.DatePickerWithDateSelectableDatesSample
- *
- * @param state state of the date picker. See [rememberDatePickerState].
- * @param modifier the [Modifier] to be applied to this date picker
- * @param dateFormatter a [DatePickerFormatter] that provides formatting skeletons for dates display
- * @param title the title to be displayed in the date picker
- * @param headline the headline to be displayed in the date picker
- * @param showModeToggle indicates if this DatePicker should show a mode toggle action that
- *   transforms it into a date input
- * @param colors [DatePickerColors] that will be used to resolve the colors used for this date
- *   picker in different states. See [DatePickerDefaults.colors].
+ * @throws IllegalArgumentException if the provided [dateFormatter] is not an instance of [HijriDatePickerFormatter].
+ * @throws IllegalArgumentException if the provided `state.selectableDates` is not an instance of [HijriSelectableDates].
+ * Value is created using [hijriSelectableDates] function.
  */
 @ExperimentalMaterial3Api
 @Composable
@@ -152,22 +99,24 @@ fun HijriDatePicker(
             modifier = Modifier.padding(DatePickerHeadlinePadding)
         )
     },
-//    showModeToggle: Boolean = true, //TODO: This is false for now, not fully supported yet.
+    showModeToggle: Boolean = true,
+    locale: Locale = LocalConfiguration.current.locales[0],
+    decimalStyle: DecimalStyle = DecimalStyle.of(locale),
     colors: DatePickerColors = DatePickerDefaults.colors()
 ) {
 
-    val showModeToggle = false
     require(dateFormatter is HijriDatePickerFormatter) {
         "The provided dateFormatter must be an instance of HijriDatePickerFormatter. Use `HijriDatePickerDefaults.dateFormatter()` to create one."
     }
 
-    val selectableDates =state.selectableDates
+    val selectableDates = state.selectableDates
     require(selectableDates is HijriSelectableDates) {
         "The provided selectableDates must be an instance of HijriSelectableDates. Use `hijriSelectableDates()` to create one."
     }
-    
+
     CompositionLocalProvider(
-        LocalPickerLocale provides state.locale,
+        LocalPickerLocale provides locale,
+        LocalPickerDecimalStyle provides decimalStyle,
         LocalPickerFormatter provides dateFormatter,
         LocalFirstDayOfWeek provides firstDayOfWeek,
     ) {
@@ -181,7 +130,7 @@ fun HijriDatePicker(
                         DisplayModeToggleButton(
                             modifier = Modifier.padding(DatePickerModeTogglePadding),
                             displayMode = state.displayMode,
-                            onDisplayModeChange = { displayMode -> /*state.displayMode = displayMode*/ }, //TODO: This is immutable for now, not fully supported yet.
+                            onDisplayModeChange = { displayMode -> state.displayMode = displayMode },
                         )
                     }
                 } else {
@@ -204,7 +153,6 @@ fun HijriDatePicker(
         }
     }
 }
-
 
 /**
  * A base container for the date picker and the date input. This container composes the top common
@@ -276,14 +224,14 @@ internal fun DisplayModeToggleButton(
         IconButton(onClick = { onDisplayModeChange(DisplayMode.Input) }, modifier = modifier) {
             Icon(
                 imageVector = Icons.Filled.Edit,
-                contentDescription = getString(Strings.Companion.DatePickerSwitchToInputMode)
+                contentDescription = stringResource(R.string.date_picker_switch_to_input_mode)
             )
         }
     } else {
         IconButton(onClick = { onDisplayModeChange(DisplayMode.Picker) }, modifier = modifier) {
             Icon(
                 imageVector = Icons.Filled.DateRange,
-                contentDescription = getString(Strings.Companion.DatePickerSwitchToCalendarMode)
+                contentDescription = stringResource(R.string.date_picker_switch_to_calendar_mode)
             )
         }
     }
@@ -305,6 +253,7 @@ private fun SwitchableDateEntryContent(
     selectableDates: HijriSelectableDates,
     colors: DatePickerColors
 ) {
+    val dateFormatter = LocalPickerFormatter.current
     // Parallax effect offset that will slightly scroll in and out the navigation part of the picker
     // when the display mode changes.
     DatePickerAnimatedContent(displayMode) { mode ->
@@ -321,16 +270,15 @@ private fun SwitchableDateEntryContent(
                 )
 
             DisplayMode.Input -> {
-
-                TODO("Not implemented yet")
-//                DateInputContent(
-//                    selectedDate = selectedDate,
-//                    onDateSelectionChange = onDateSelectionChange,
-//                    calendarModel = calendarModel,
-//                    yearRange = yearRange,
-//                    selectableDates = selectableDates,
-//                    colors = colors
-//                )
+                DateInputContent(
+                    selectedDate = selectedDate,
+                    onDateSelectionChange = onDateSelectionChange,
+                    yearRange = yearRange,
+                    selectableDates = selectableDates,
+                    colors = colors,
+                    pattern = dateFormatter.inputDateSkeleton,
+                    patternDelimiter = dateFormatter.inputDateDelimiter
+                )
             }
         }
     }
@@ -365,11 +313,11 @@ private fun DatePickerContent(
             nextAvailable = monthPager.canScrollForward,
             previousAvailable = monthPager.canScrollBackward,
             yearPickerVisible = yearPickerVisible,
-            yearPickerText =
-                dateFormatter.formatMonthYear(
-                    date = displayedMonth,
-                    locale = LocalPickerLocale.current
-                ) ?: "-",
+            yearPickerText = dateFormatter.formatMonthYear(
+                date = displayedMonth,
+                locale = LocalPickerLocale.current,
+                decimalStyle = LocalPickerDecimalStyle.current
+            ) ?: "-",
             onNextClicked = {
                 coroutineScope.launch {
                     monthPager.animateScrollToPage(
@@ -409,20 +357,21 @@ private fun DatePickerContent(
             ) {
                 // Apply a paneTitle to make the screen reader focus on a relevant node after this
                 // column is hidden and disposed.
-                val yearsPaneTitle = getString(Strings.Companion.DatePickerYearPickerPaneTitle)
+                val yearsPaneTitle = stringResource(R.string.date_picker_year_picker_pane_title)
                 Column(modifier = Modifier.semantics { paneTitle = yearsPaneTitle }) {
                     YearPicker(
                         // Keep the height the same as the monthly calendar + weekdays height, and
                         // take into account the thickness of the divider that will be composed
                         // below it.
                         modifier =
-                            Modifier.requiredHeight(
-                                RecommendedSizeForAccessibility * (MAX_CALENDAR_ROWS + 1) -
-                                        DividerDefaults.Thickness
-                            )
+                            Modifier
+                                .requiredHeight(
+                                    RecommendedSizeForAccessibility * (MAX_CALENDAR_ROWS + 1) -
+                                            DividerDefaults.Thickness
+                                )
                                 .padding(horizontal = DatePickerHorizontalPadding),
-                        currentYear = currentDate.get(ChronoField.YEAR_OF_ERA),
-                        displayedYear = displayedMonth.get(ChronoField.YEAR_OF_ERA),
+                        currentYear = currentDate.year,
+                        displayedYear = displayedMonth.year,
                         onYearSelected = { year ->
                             // Switch back to the monthly calendar and scroll to the selected year.
                             yearPickerVisible = !yearPickerVisible
@@ -430,7 +379,7 @@ private fun DatePickerContent(
                                 // Scroll to the selected year (maintaining the month of year).
                                 // A LaunchEffect at the MonthsList will take care of rest and will
                                 // update the state's displayedMonth to the month we scrolled to.
-                                val withTargetYear = displayedMonth.with(ChronoField.YEAR_OF_ERA, year.toLong())
+                                val withTargetYear = displayedMonth.withYear(year)
                                 val page = calculatePageFromDate(withTargetYear, yearRange)
                                 monthPager.scrollToPage(page)
                             }
@@ -463,7 +412,9 @@ internal fun DatePickerHeader(
             Modifier
         }
     Column(
-        modifier.fillMaxWidth().then(heightModifier),
+        modifier
+            .fillMaxWidth()
+            .then(heightModifier),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         if (title != null) {
@@ -475,8 +426,6 @@ internal fun DatePickerHeader(
         CompositionLocalProvider(LocalContentColor provides headlineContentColor, content = content)
     }
 }
-
-
 
 
 /**
@@ -497,7 +446,9 @@ private fun MonthsNavigation(
     colors: DatePickerColors
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().requiredHeight(MonthYearHeight),
+        modifier = modifier
+            .fillMaxWidth()
+            .requiredHeight(MonthYearHeight),
         horizontalArrangement =
             if (yearPickerVisible) {
                 Arrangement.Start
@@ -530,13 +481,13 @@ private fun MonthsNavigation(
                     IconButton(onClick = onPreviousClicked, enabled = previousAvailable) {
                         Icon(
                             Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                            contentDescription = getString(Strings.Companion.DatePickerSwitchToPreviousMonth)
+                            contentDescription = stringResource(R.string.date_picker_switch_to_previous_month)
                         )
                     }
                     IconButton(onClick = onNextClicked, enabled = nextAvailable) {
                         Icon(
                             Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = getString(Strings.Companion.DatePickerSwitchToNextMonth)
+                            contentDescription = stringResource(R.string.date_picker_switch_to_next_month)
                         )
                     }
                 }
@@ -544,7 +495,6 @@ private fun MonthsNavigation(
         }
     }
 }
-
 
 
 internal val RecommendedSizeForAccessibility = 48.dp
