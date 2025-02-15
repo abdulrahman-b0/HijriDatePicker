@@ -7,4 +7,5 @@ plugins {
 }
 
 rootProject.description  = "A modern and stylish Hijri Date Picker for Android, built with Jetpack Compose and inspired by the Material 3 Date Picker."
+rootProject.group  = "com.abdulrahman-b.hijridatepicker"
 rootProject.version = "1.0.0-alpha01"
