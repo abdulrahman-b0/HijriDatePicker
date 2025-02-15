@@ -58,8 +58,17 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.material)
     testImplementation(libs.junit)
+    testImplementation(kotlin("test-junit5"))
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 val gradleProperties = Properties().apply {
