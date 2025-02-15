@@ -111,7 +111,7 @@ fun DatePickerFormSample(
                     )
                 },
             ) {
-                HijriDatePicker(state = datePickerState, decimalStyle = DecimalStyle.STANDARD)
+                HijriDatePicker(state = datePickerState)
             }
         }
 
@@ -159,7 +159,7 @@ fun DatePickerFormSample(
                     )
                 },
             ) {
-                HijriDateRangePicker(state = dateRangePickerState, decimalStyle = DecimalStyle.STANDARD)
+                HijriDateRangePicker(state = dateRangePickerState)
             }
         }
 
