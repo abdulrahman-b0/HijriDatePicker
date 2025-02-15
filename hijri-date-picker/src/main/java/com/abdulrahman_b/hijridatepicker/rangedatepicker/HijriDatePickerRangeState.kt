@@ -138,6 +138,17 @@ internal class HijriDateRangePickerStateImpl(
 
 }
 
+/**
+ * Remembers the state of a Hijri date range picker.
+ *
+ * @param initialSelectedStartDate The initially selected start date, or null if no date is selected.
+ * @param initialSelectedEndDate The initially selected end date, or null if no date is selected.
+ * @param initialDisplayedMonth The initially displayed month in the date picker.
+ * @param initialDisplayMode The initial display mode of the date picker (Picker or Input).
+ * @param yearRange The range of years that the date picker will be limited to.
+ * @param selectableDates A SelectableDates object that determines which dates are selectable.
+ * @return A HijriDateRangePickerState object that holds the state of the date range picker.
+ */
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun rememberHijriDateRangePickerState(
