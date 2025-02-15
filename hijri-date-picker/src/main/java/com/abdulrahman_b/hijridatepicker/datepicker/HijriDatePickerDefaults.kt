@@ -16,18 +16,17 @@ package com.abdulrahman_b.hijridatepicker.datepicker
 * limitations under the License.
 */
 
-import androidx.compose.material3.DatePickerFormatter
-import androidx.compose.material3.DisplayMode
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.sp
 import com.abdulrahman_b.hijridatepicker.*
+import com.abdulrahman_b.hijridatepicker.R
 import com.abdulrahman_b.hijridatepicker.datepicker.HijriDatePickerDefaults.dateFormatter
 import java.time.chrono.HijrahChronology
 import java.time.chrono.HijrahDate
@@ -48,7 +47,7 @@ object HijriDatePickerDefaults {
     const val YEAR_MONTH_SKELETON: String = "yMMMM"
 
     /** A date format skeleton used to format a selected date (e.g. "Saf 27, 1446") */
-    const val YEAR_ABBR_MONTH_DAY_SKELETON: String = "yMMMd"
+    const val YEAR_ABBR_MONTH_DAY_SKELETON: String = "yMMMMd"
 
     /**
      * A date format skeleton used to format a selected date to be used as content description for
@@ -138,13 +137,23 @@ object HijriDatePickerDefaults {
             else -> ""
         }.format(verboseDateDescription)
 
+        val style = LocalTextStyle.current
+        var fontSize by remember(style) {
+            mutableFloatStateOf(style.fontSize.value)
+        }
         Text(
             text = headlineText,
             modifier = modifier.semantics {
                 liveRegion = LiveRegionMode.Companion.Polite
                 contentDescription = headlineDescription
             },
-            maxLines = 1
+            maxLines = 1,
+            fontSize = fontSize.sp,
+            onTextLayout = { result ->
+                if (result.hasVisualOverflow) {
+                    fontSize--
+                }
+            }
         )
     }
 

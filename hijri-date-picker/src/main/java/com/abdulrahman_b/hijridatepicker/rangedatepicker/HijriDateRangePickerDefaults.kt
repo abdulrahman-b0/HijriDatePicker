@@ -16,13 +16,19 @@ package com.abdulrahman_b.hijridatepicker.rangedatepicker
 * limitations under the License.
 */
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,7 +36,9 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.abdulrahman_b.hijridatepicker.LocalPickerDecimalStyle
 import com.abdulrahman_b.hijridatepicker.LocalPickerFormatter
 import com.abdulrahman_b.hijridatepicker.LocalPickerLocale
@@ -175,14 +183,36 @@ object HijriDateRangePickerDefaults {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
+            val style = LocalTextStyle.current
+            var fontSize by remember(style, selectedStartDate, selectedEndDate) {
+                mutableFloatStateOf(style.fontSize.value)
+            }
             if (formatterStartDate != null) {
-                Text(text = formatterStartDate)
+                Text(
+                    text = formatterStartDate,
+                    maxLines = 1,
+                    fontSize = fontSize.sp,
+                    onTextLayout = { result ->
+                        if (result.hasVisualOverflow) {
+                            fontSize--
+                        }
+                    }
+                )
             } else {
                 startDatePlaceholder()
             }
             datesDelimiter()
             if (formatterEndDate != null) {
-                Text(text = formatterEndDate)
+                Text(
+                    text = formatterEndDate,
+                    maxLines = 1,
+                    fontSize = fontSize.sp,
+                    onTextLayout = { result ->
+                        if (result.hasVisualOverflow) {
+                            fontSize--
+                        }
+                    }
+                )
             } else {
                 endDatePlaceholder()
             }
