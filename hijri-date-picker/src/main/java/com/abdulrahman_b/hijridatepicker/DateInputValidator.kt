@@ -72,73 +72,73 @@ internal class DateInputValidator(
     internal var currentEndDate: HijrahDate? = null,
 ) {
 
-/**
- * Validates a given HijrahDate input and returns an error message if the date is invalid.
- * If the date is valid, an empty string is returned.
- *
- * @param dateToValidate A Result containing the HijrahDate to validate.
- * @param inputIdentifier An InputIdentifier indicating the type of input field (start or end date).
- * @param locale The current Locale used for formatting.
- * @param decimalStyle The DecimalStyle used for formatting numbers.
- * @return A string containing an error message if the date is invalid, or an empty string if the date is valid.
- */
-fun validate(
-    dateToValidate: Result<HijrahDate>,
-    inputIdentifier: InputIdentifier,
-    locale: Locale,
-    decimalStyle: DecimalStyle
-): String {
+    /**
+     * Validates a given HijrahDate input and returns an error message if the date is invalid.
+     * If the date is valid, an empty string is returned.
+     *
+     * @param dateToValidate A Result containing the HijrahDate to validate.
+     * @param inputIdentifier An InputIdentifier indicating the type of input field (start or end date).
+     * @param locale The current Locale used for formatting.
+     * @param decimalStyle The DecimalStyle used for formatting numbers.
+     * @return A string containing an error message if the date is invalid, or an empty string if the date is valid.
+     */
+    fun validate(
+        dateToValidate: Result<HijrahDate>,
+        inputIdentifier: InputIdentifier,
+        locale: Locale,
+        decimalStyle: DecimalStyle
+    ): String {
 
-    return dateToValidate.fold(
-        onSuccess = { date ->
-            // Check if the date is within the valid range of years.
-            if (!yearRange.contains(date.year)) {
-                return errorDateOutOfYearRange.format(
-                    yearRange.first.toLocalString(locale, decimalStyle),
-                    yearRange.last.toLocalString(locale, decimalStyle)
-                )
-            }
-            // Check if the date is selectable according to the provided SelectableDates.
-            with(selectableDates) {
-                if (
-                    !isSelectableYear(date.year) ||
-                    !isSelectableDate(date)
-                ) {
-                    return errorInvalidNotAllowed.format(
-                        dateFormatter.formatDate(
-                            date = date,
-                            locale = locale,
-                            decimalStyle = DecimalStyle.STANDARD
-                        )
+        return dateToValidate.fold(
+            onSuccess = { date ->
+                // Check if the date is within the valid range of years.
+                if (!yearRange.contains(date.year)) {
+                    return errorDateOutOfYearRange.format(
+                        yearRange.first.toLocalString(locale, decimalStyle),
+                        yearRange.last.toLocalString(locale, decimalStyle)
                     )
                 }
-            }
+                // Check if the date is selectable according to the provided SelectableDates.
+                with(selectableDates) {
+                    if (
+                        !isSelectableYear(date.year) ||
+                        !isSelectableDate(date)
+                    ) {
+                        return errorInvalidNotAllowed.format(
+                            dateFormatter.formatDate(
+                                date = date,
+                                locale = locale,
+                                decimalStyle = DecimalStyle.STANDARD
+                            )
+                        )
+                    }
+                }
 
-            // Additional validation for range inputs (start and end dates).
-            if (
-                (inputIdentifier == InputIdentifier.StartDateInput && date >= (currentEndDate
-                    ?: HijrahDates.MAX)) ||
-                (inputIdentifier == InputIdentifier.EndDateInput && date < (currentStartDate ?: HijrahDates.MIN))
-            ) {
-                // The start date is after the end date, or the end date is before the start date.
-                return errorInvalidRangeInput
-            }
+                // Additional validation for range inputs (start and end dates).
+                if (
+                    (inputIdentifier == InputIdentifier.StartDateInput && date >= (currentEndDate
+                        ?: HijrahDates.MAX)) ||
+                    (inputIdentifier == InputIdentifier.EndDateInput && date < (currentStartDate ?: HijrahDates.MIN))
+                ) {
+                    // The start date is after the end date, or the end date is before the start date.
+                    return errorInvalidRangeInput
+                }
 
-            return ""
-        },
-        onFailure = { exception ->
-            // Handle parsing exceptions and return appropriate error messages.
-            return if (exception is DateTimeParseException && exception.message?.contains("YearOfEra (valid values") == true) {
-                val firstYear = yearRange.first.toLocalString(locale, decimalStyle)
-                val lastYear = yearRange.last.toLocalString(locale, decimalStyle)
-                errorDateOutOfYearRange.format(firstYear, lastYear)
-            } else {
-                errorDatePattern.format(dateInputFormat.patternWithDelimiters.uppercase())
+                return ""
+            },
+            onFailure = { exception ->
+                // Handle parsing exceptions and return appropriate error messages.
+                return if (exception is DateTimeParseException && exception.message?.contains("YearOfEra (valid values") == true) {
+                    val firstYear = yearRange.first.toLocalString(locale, decimalStyle)
+                    val lastYear = yearRange.last.toLocalString(locale, decimalStyle)
+                    errorDateOutOfYearRange.format(firstYear, lastYear)
+                } else {
+                    errorDatePattern.format(dateInputFormat.patternWithDelimiters.uppercase())
+                }
             }
-        }
-    )
+        )
 
-}
+    }
 }
 
 
