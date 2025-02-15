@@ -70,7 +70,18 @@ interface HijriDateRangePickerState {
      */
     val selectableDates: SelectableDates
 
+
+    fun getSelectedDateRange(): SelectedDateRange? {
+        val startDate = selectedStartDate
+        val endDate = selectedEndDate
+        if (startDate == null || endDate == null)
+            return null
+        return SelectedDateRange(startDate, endDate)
+    }
+
 }
+
+data class SelectedDateRange(val startDate: HijrahDate, val endDate: HijrahDate)
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,7 +99,6 @@ internal class HijriDateRangePickerStateImpl(
     override var selectedEndDate by mutableStateOf(initialSelectedEndDate)
 
     override var displayedMonth by mutableStateOf(initialDisplayedMonth)
-
 
     override var displayMode by mutableStateOf(initialDisplayMode)
 
