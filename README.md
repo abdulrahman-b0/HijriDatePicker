@@ -111,7 +111,7 @@ if (selectDateDialogOpen) {
 ## Installation
 
 This library requires Jetpack Compose and Material3 components, so make sure you have them set up in your project.
-The library also requires JDK 11 or higher to build and run the dependencies.
+The library also requires minimum sdk 26 or higher, and JDK 11 or higher to build and run the dependencies.
 
 - Add the Maven Central repository if it is not already there:
 
