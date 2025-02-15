@@ -1,10 +1,10 @@
 # Security Policy
-This library is focused on date and time functionalities and does not directly deal with security principles. However, I am committed to maintaining the integrity and security of our codebase.
+This library is focused on date picker functionalities and does not directly deal with security principles. However, I am committed to maintaining the integrity and security of our codebase.
 
 ## Supported Versions
 
 | Version | Supported          |
-| ------- | ------------------ |
+|---------|--------------------|
 | 1.x.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
