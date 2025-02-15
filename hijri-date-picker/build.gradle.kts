@@ -1,5 +1,6 @@
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 import com.vanniktech.maven.publish.SonatypeHost
-import java.util.Properties
+import java.util.*
 
 
 plugins {
@@ -15,9 +16,14 @@ android {
 
     defaultConfig {
         minSdk = 26
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+
+        aarMetadata {
+            minCompileSdk = 26
+        }
+
     }
 
     buildTypes {
@@ -72,6 +78,13 @@ mavenPublishing {
         version = rootProject.version.toString()
     )
 
+    configure(
+        AndroidSingleVariantLibrary(
+            variant = "release",
+            sourcesJar = true,
+            publishJavadocJar = true,
+        )
+    )
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
     pom { configurePom(this) }
 
