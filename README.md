@@ -1,6 +1,6 @@
 # Hijri Date Picker
 
-[![Version](https://img.shields.io/badge/Version-1.0.0-alpha01-puregreen.svg)]()
+[//]: # ([![Version]&#40;https://img.shields.io/badge/Version-1.0.0alpha01-puregreen.svg&#41;]&#40;&#41;)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.1.0-purple.svg?logo=kotlin)]()
 [![Java](https://img.shields.io/badge/java-11-orange.svg?logo=java)]()
 [![Donation](https://img.shields.io/badge/Donation-PayPal-blue.svg?logo=paypal)](https://www.paypal.com/paypalme/AbdulrahmanBahamel)
