@@ -181,7 +181,6 @@ internal fun DateInputTextField(
 }
 
 
-
 /**
  * Represents different input identifiers for the [DateInputTextField]. An `InputIdentifier` is used
  * when validating the user input, and especially when validating an input range.
@@ -250,9 +249,12 @@ private class DateVisualTransformation(private val dateInputFormat: DateInputFor
         }
         var transformedText = ""
         trimmedText.forEachIndexed { index, char ->
-            transformedText += char
-            if (index + 1 == firstDelimiterOffset || index + 2 == secondDelimiterOffset) {
-                transformedText += dateInputFormat.delimiter
+            transformedText += if (index + 1 == firstDelimiterOffset) {
+                "${char}${dateInputFormat.delimiter}"
+            } else if (index + 1 == secondDelimiterOffset) {
+                "${dateInputFormat.delimiter}${char}"
+            } else {
+                char
             }
         }
         return TransformedText(AnnotatedString(transformedText), dateOffsetTranslator)
