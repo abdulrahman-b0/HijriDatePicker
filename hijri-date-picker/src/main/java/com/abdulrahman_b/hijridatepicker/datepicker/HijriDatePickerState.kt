@@ -117,6 +117,7 @@ internal class HijriDatePickerStateImpl(
  * @param initialDisplayMode The initial display mode of the date picker, either picker or input. Defaults to [DisplayMode.Picker].
  * @param yearRange The range of years that the date picker is limited to, excluded dates doesn't appear in the picker UI. Defaults to [HijriDatePickerDefaults.YearRange].
  * @param selectableDates Defines which dates are selectable. Disabled dates will appear grayed out in the UI. Defaults to [HijriDatePickerDefaults.AllDates], which allows all dates.
+ * @return A [HijriDatePickerState] that can be remembered across compositions.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

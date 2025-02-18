@@ -66,7 +66,7 @@ interface HijriDateRangePickerState {
     val yearRange: IntRange
 
     /**
-     * A [SelectableDates] that is consulted to check if a date is allowed.
+     * A [HijriSelectableDates] that is consulted to check if a date is allowed.
      *
      * In case a date is not allowed to be selected, it will appear disabled in the UI.
      */
@@ -84,6 +84,11 @@ interface HijriDateRangePickerState {
 
 }
 
+/**
+ * Represents a selected date range.
+ * @param startDate The start date of the range.
+ * @param endDate The end date of the range.
+ */
 data class SelectedDateRange(val startDate: HijrahDate, val endDate: HijrahDate)
 
 
@@ -146,7 +151,7 @@ internal class HijriDateRangePickerStateImpl(
  * @param initialDisplayMode The initial display mode of the date picker (Picker or Input).
  * @param yearRange The range of years that the date picker will be limited to.
  * @param selectableDates A SelectableDates object that determines which dates are selectable.
- * @return A HijriDateRangePickerState object that holds the state of the date range picker.
+ * @return A [HijriDateRangePickerState] object that holds the state of the date range picker.
  */
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
