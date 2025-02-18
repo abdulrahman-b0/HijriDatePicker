@@ -53,7 +53,7 @@ object HijriDatePickerDefaults {
      * screen readers (e.g. "Saturday, Shawwal 27, 1446")
      */
     @Suppress("SpellCheckingInspection")
-    const val YEAR_MONTH_WEEKDAY_DAY_SKELETON: String = "yMMMMEEEEd"
+    const val YEAR_MONTH_WEEKDAY_DAY_SKELETON: String = "yMMMEEEd"
 
     private const val INPUT_DATE_SKELETON: String = "yyyy/MM/dd"
     private const val INPUT_DATE_DELIMITER: Char = '/'
