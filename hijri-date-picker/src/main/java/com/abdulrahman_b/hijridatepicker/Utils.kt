@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.FlowRowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.material3.DatePickerColors
+import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -243,5 +244,14 @@ fun FlowRowScope.FillRemainingOfRow(lastItemPosition: Int, maxItemsPerRow: Int) 
                 height = RecommendedSizeForAccessibility
             )
         )
+    }
+}
+
+
+internal fun DisplayMode.Companion.valueOf(value: String): DisplayMode {
+    return when (value) {
+        "Picker" -> Picker
+        "Input" -> Input
+        else -> throw IllegalArgumentException("Invalid DisplayMode: $value")
     }
 }
