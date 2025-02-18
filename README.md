@@ -17,7 +17,10 @@ high-quality solution for Muslim users.
 ![Hijri Date Picker](screenshots/hijridatepicker-picker-en.jpg)
 
 ![Hijri Date Picker](screenshots/hijridatepicker-rangepicker-ar.jpg)
-![Hijri Date Picker](screenshots/hijridatepicker-rangepicker-en.jpg)
+![Hijri Date Picker](screenshots/hijridatepicker-rangepicker-en.jpg)\
+
+![Hijri Date Picker](screenshots/hijridatepicker-rangeinput-ar.jpg)
+![Hijri Date Picker](screenshots/hijridatepicker-input-en.jpg)
 
 
 ## Table of Contents
@@ -38,9 +41,6 @@ high-quality solution for Muslim users.
   calendar with validation to ensure the date is valid.
 - **Interoperability with Java Time API**: The Hijri Date Picker uses [HijrahDate](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/chrono/HijrahDate.html)
   from the Java Time API to handle Hijri dates, ensuring accuracy and reliability.
-- **Material3 Components**: The Hijri Date Picker is built using Material3 components, providing a consistent and
-  high-quality user experience.
-
 
 ## Usage
 
