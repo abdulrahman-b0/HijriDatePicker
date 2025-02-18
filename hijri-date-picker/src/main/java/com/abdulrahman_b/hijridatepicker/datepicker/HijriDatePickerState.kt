@@ -18,12 +18,13 @@ package com.abdulrahman_b.hijridatepicker.datepicker
 
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SelectableDates
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import java.time.chrono.HijrahChronology
+import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates
+import com.abdulrahman_b.hijridatepicker.HijriSelectableDates
+import com.abdulrahman_b.hijridatepicker.valueOf
 import java.time.chrono.HijrahDate
 
 /**
@@ -59,17 +60,17 @@ interface HijriDatePickerState {
     /**
      * Defines which dates are selectable. Disabled dates will appear grayed out in the UI.
      */
-    val selectableDates: SelectableDates
+    val selectableDates: HijriSelectableDates
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-private class HijriDatePickerStateImpl(
+internal class HijriDatePickerStateImpl(
     initialSelectedDate: HijrahDate?,
     initialDisplayedMonth: HijrahDate,
     initialDisplayMode: DisplayMode,
     override val yearRange: IntRange,
-    override val selectableDates: SelectableDates,
+    override val selectableDates: HijriSelectableDates,
 ) : HijriDatePickerState {
 
     override var selectedDate by mutableStateOf(initialSelectedDate)
@@ -83,9 +84,7 @@ private class HijriDatePickerStateImpl(
 
     companion object {
 
-        fun Saver(
-            selectableDates: SelectableDates,
-        ): Saver<HijriDatePickerState, *> = listSaver(
+        fun Saver(selectableDates: HijriSelectableDates): Saver<HijriDatePickerState, *> = listSaver(
             save = {
                 listOf(
                     it.selectedDate?.toEpochDay(),
@@ -97,13 +96,9 @@ private class HijriDatePickerStateImpl(
             },
             restore = { value ->
                 HijriDatePickerStateImpl(
-                    initialSelectedDate = (value[0] as? Long)?.let(HijrahChronology.INSTANCE::dateEpochDay),
-                    initialDisplayedMonth = HijrahChronology.INSTANCE.dateEpochDay(value[1] as Long),
-                    initialDisplayMode = when ((value[4] as String)) {
-                        "Picker" -> DisplayMode.Picker
-                        "Input" -> DisplayMode.Input
-                        else -> throw IllegalArgumentException("Invalid DisplayMode")
-                    },
+                    initialSelectedDate = (value[0] as? Long)?.let(HijrahDates::ofEpochDay),
+                    initialDisplayedMonth = HijrahDates.ofEpochDay(value[1] as Long),
+                    initialDisplayMode = DisplayMode.valueOf(value[4] as String),
                     yearRange = IntRange(value[2] as Int, value[3] as Int),
                     selectableDates = selectableDates,
                 )
@@ -130,7 +125,7 @@ fun rememberHijriDatePickerState(
     initialDisplayedMonth: HijrahDate = HijrahDate.now(),
     initialDisplayMode: DisplayMode = DisplayMode.Picker,
     yearRange: IntRange = HijriDatePickerDefaults.YearRange,
-    selectableDates: SelectableDates = HijriDatePickerDefaults.AllDates,
+    selectableDates: HijriSelectableDates = HijriDatePickerDefaults.AllDates,
 ): HijriDatePickerState {
     return rememberSaveable(
         saver = HijriDatePickerStateImpl.Saver(selectableDates)

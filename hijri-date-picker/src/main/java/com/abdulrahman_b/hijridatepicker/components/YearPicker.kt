@@ -38,6 +38,7 @@ import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.abdulrahman_b.hijridatepicker.HijriSelectableDates
 import com.abdulrahman_b.hijridatepicker.R
 import com.abdulrahman_b.hijridatepicker.toLocalString
 import com.abdulrahman_b.hijridatepicker.tokens.DatePickerModalTokens
@@ -85,7 +86,7 @@ internal fun YearPicker(
     currentYear: Int,
     displayedYear: Int,
     onYearSelected: (year: Int) -> Unit,
-    selectableDates: SelectableDates,
+    selectableDates: HijriSelectableDates,
     yearRange: IntRange,
     colors: DatePickerColors
 ) {
@@ -159,8 +160,6 @@ internal fun YearPicker(
                 ) {
                     Text(
                         text = localizedYear,
-                        // The semantics are set at the Year level.
-                        modifier = Modifier.clearAndSetSemantics {},
                         textAlign = TextAlign.Center
                     )
                 }

@@ -101,11 +101,11 @@ class DateInputValidatorTest {
     ) {
         subject = DateInputValidator(
             yearRange = 1356..1450,
-            selectableDates = hijriSelectableDates(
-                isSelectableYear = { it in 1356..1446 }
-            ) as HijriSelectableDates,
+            selectableDates = object : HijriSelectableDates {
+                override fun isSelectableYear(year: Int): Boolean = year  in 1356..1446
+            },
             dateInputFormat = DateInputFormat("dd/MM/yyyy", '/'),
-            dateFormatter = HijriDatePickerDefaults.dateFormatter() as HijriDatePickerFormatter,
+            dateFormatter = HijriDatePickerDefaults.dateFormatter(),
             errorDatePattern = "Does not match the expected pattern: %s",
             errorDateOutOfYearRange = "Date is out of year range: %s - %s",
             errorInvalidNotAllowed = "Date is not allowed: %s",

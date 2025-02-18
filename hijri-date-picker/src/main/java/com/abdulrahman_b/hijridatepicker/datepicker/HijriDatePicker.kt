@@ -16,6 +16,7 @@
 
 package com.abdulrahman_b.hijridatepicker.datepicker
 
+import com.abdulrahman_b.hijridatepicker.R
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -47,8 +48,7 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.chrono.HijrahDate
 import java.time.format.DecimalStyle
-import java.util.Locale
-import com.abdulrahman_b.hijridatepicker.R
+import java.util.*
 
 /**
  * [HijriDatePicker] is a composable function that provides a date picker component for selecting dates
@@ -74,17 +74,13 @@ import com.abdulrahman_b.hijridatepicker.R
  * @param decimalStyle The [DecimalStyle] used to format the date. The default value is the decimal style of the provided locale.
  * This is useful if you want to use a different decimal style than the default locale.
  *
- *
- * @throws IllegalArgumentException if the provided [dateFormatter] is not an instance of [HijriDatePickerFormatter].
- * @throws IllegalArgumentException if the provided `state.selectableDates` is not an instance of [HijriSelectableDates].
- * Value is created using [hijriSelectableDates] function.
  */
 @ExperimentalMaterial3Api
 @Composable
 fun HijriDatePicker(
     state: HijriDatePickerState,
     modifier: Modifier = Modifier,
-    dateFormatter: DatePickerFormatter = remember { HijriDatePickerDefaults.dateFormatter() },
+    dateFormatter: HijriDatePickerFormatter = remember { HijriDatePickerDefaults.dateFormatter() },
     firstDayOfWeek: DayOfWeek = DayOfWeek.SATURDAY,
     title: (@Composable () -> Unit)? = {
         HijriDatePickerDefaults.DatePickerTitle(
@@ -105,14 +101,7 @@ fun HijriDatePicker(
     colors: DatePickerColors = DatePickerDefaults.colors()
 ) {
 
-    require(dateFormatter is HijriDatePickerFormatter) {
-        "The provided dateFormatter must be an instance of HijriDatePickerFormatter. Use `HijriDatePickerDefaults.dateFormatter()` to create one."
-    }
-
     val selectableDates = state.selectableDates
-    require(selectableDates is HijriSelectableDates) {
-        "The provided selectableDates must be an instance of HijriSelectableDates. Use `hijriSelectableDates()` to create one."
-    }
 
     CompositionLocalProvider(
         LocalPickerLocale provides locale,

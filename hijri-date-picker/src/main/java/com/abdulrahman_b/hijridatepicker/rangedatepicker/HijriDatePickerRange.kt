@@ -81,7 +81,7 @@ import java.util.*
 fun HijriDateRangePicker(
     state: HijriDateRangePickerState,
     modifier: Modifier = Modifier,
-    dateFormatter: DatePickerFormatter = remember { HijriDatePickerDefaults.dateFormatter() },
+    dateFormatter: HijriDatePickerFormatter = remember { HijriDatePickerDefaults.dateFormatter() },
     title: (@Composable () -> Unit)? = {
         HijriDateRangePickerDefaults.DateRangePickerTitle(
             displayMode = state.displayMode,
@@ -102,15 +102,8 @@ fun HijriDateRangePicker(
     showModeToggle: Boolean = true,
     colors: DatePickerColors = DatePickerDefaults.colors()
 ) {
-
-    require(dateFormatter is HijriDatePickerFormatter) {
-        "The provided dateFormatter must be an instance of HijriDatePickerFormatter. Use `HijriDatePickerDefaults.dateFormatter()` to create one."
-    }
-
     val selectableDates = state.selectableDates
-    require(selectableDates is HijriSelectableDates) {
-        "The provided selectableDates must be an instance of HijriSelectableDates. Use `hijriSelectableDates()` to create one."
-    }
+
 
     CompositionLocalProvider(
         LocalPickerFormatter provides dateFormatter,

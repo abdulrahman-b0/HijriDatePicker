@@ -16,19 +16,13 @@ package com.abdulrahman_b.hijridatepicker.rangedatepicker
 * limitations under the License.
 */
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -36,7 +30,6 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abdulrahman_b.hijridatepicker.LocalPickerDecimalStyle
@@ -140,10 +133,10 @@ object HijriDateRangePickerDefaults {
         val decimalStyle = LocalPickerDecimalStyle.current
         val dateFormatter = LocalPickerFormatter.current
         val formatterStartDate =
-            dateFormatter.formatDate(selectedStartDate, defaultLocale, decimalStyle)
+            dateFormatter.formatHeadlineDate(selectedStartDate, defaultLocale, decimalStyle)
 
         val formatterEndDate =
-            dateFormatter.formatDate(selectedEndDate, defaultLocale, decimalStyle)
+            dateFormatter.formatHeadlineDate(selectedEndDate, defaultLocale, decimalStyle)
 
         val verboseStartDateDescription =
             dateFormatter.formatDate(

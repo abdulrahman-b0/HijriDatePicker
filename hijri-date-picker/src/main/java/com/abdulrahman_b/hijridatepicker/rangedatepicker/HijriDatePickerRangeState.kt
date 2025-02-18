@@ -25,7 +25,9 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates
+import com.abdulrahman_b.hijridatepicker.HijriSelectableDates
 import com.abdulrahman_b.hijridatepicker.datepicker.HijriDatePickerDefaults
+import com.abdulrahman_b.hijridatepicker.valueOf
 import java.time.chrono.HijrahDate
 
 /**
@@ -68,9 +70,10 @@ interface HijriDateRangePickerState {
      *
      * In case a date is not allowed to be selected, it will appear disabled in the UI.
      */
-    val selectableDates: SelectableDates
+    val selectableDates: HijriSelectableDates
 
 
+    @Suppress("unused")
     fun getSelectedDateRange(): SelectedDateRange? {
         val startDate = selectedStartDate
         val endDate = selectedEndDate
@@ -91,7 +94,7 @@ internal class HijriDateRangePickerStateImpl(
     initialDisplayedMonth: HijrahDate,
     initialDisplayMode: DisplayMode,
     override val yearRange: IntRange,
-    override val selectableDates: SelectableDates,
+    override val selectableDates: HijriSelectableDates,
 ) : HijriDateRangePickerState {
 
     override var selectedStartDate by mutableStateOf(initialSelectedStartDate)
@@ -106,7 +109,7 @@ internal class HijriDateRangePickerStateImpl(
     companion object {
 
         fun Saver(
-            selectableDates: SelectableDates,
+            selectableDates: HijriSelectableDates,
         ): Saver<HijriDateRangePickerState, *> = listSaver(
             save = {
                 listOf(
@@ -124,11 +127,7 @@ internal class HijriDateRangePickerStateImpl(
                     initialSelectedEndDate = (value[1] as? Long)?.let(HijrahDates::ofEpochDay),
                     initialDisplayedMonth = HijrahDates.ofEpochDay(value[2] as Long),
                     yearRange = IntRange(value[3] as Int, value[4] as Int),
-                    initialDisplayMode = when ((value[5] as String)) {
-                        "Picker" -> DisplayMode.Picker
-                        "Input" -> DisplayMode.Input
-                        else -> throw IllegalArgumentException("Invalid DisplayMode")
-                    },
+                    initialDisplayMode = DisplayMode.valueOf(value[5] as String),
                     selectableDates = selectableDates,
                 )
             }
@@ -157,7 +156,7 @@ fun rememberHijriDateRangePickerState(
     initialDisplayedMonth: HijrahDate = HijrahDate.now(),
     initialDisplayMode: DisplayMode = DisplayMode.Picker,
     yearRange: IntRange = HijriDatePickerDefaults.YearRange,
-    selectableDates: SelectableDates = HijriDatePickerDefaults.AllDates,
+    selectableDates: HijriSelectableDates = HijriDatePickerDefaults.AllDates,
 ): HijriDateRangePickerState {
     return rememberSaveable(
         saver = HijriDateRangePickerStateImpl.Saver(selectableDates)

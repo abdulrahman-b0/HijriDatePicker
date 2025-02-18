@@ -1,23 +1,6 @@
 package com.abdulrahman_b.hijridatepicker
-/*
-* Copyright 2023 The Android Open Source Project
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-
 
 import android.text.format.DateFormat
-import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.ExperimentalMaterial3Api
 import java.time.chrono.HijrahChronology
 import java.time.chrono.HijrahDate
@@ -26,25 +9,36 @@ import java.time.format.DecimalStyle
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
-internal class HijriDatePickerFormatter(
-    val yearSelectionSkeleton: String,
-    val selectedDateSkeleton: String,
-    val selectedDateDescriptionSkeleton: String,
-    val inputDateSkeleton: String,
-    val inputDateDelimiter: Char
-) : DatePickerFormatter {
+class HijriDatePickerFormatter(
+    internal val yearMonthSelectionSkeleton: String,
+    internal val selectedDateSkeleton: String,
+    internal val selectedDateDescriptionSkeleton: String,
+    internal val inputDateSkeleton: String,
+    internal val inputDateDelimiter: Char
+) {
 
     private val formattersCache = mutableMapOf<String, DateTimeFormatter>()
 
-    override fun formatDate(dateMillis: Long?, locale: Locale, forContentDescription: Boolean): String? {
-        throw UnsupportedOperationException("This method is not supported for HijriDatePickerFormatter")
+    /**
+     * Formats the given [date] using the [selectedDateSkeleton] and the provided [locale] and [decimalStyle].
+     *
+     * @param date The date to format. If null, this method will return null.
+     * @param locale The locale to use for formatting.
+     * @param decimalStyle The decimal style to use for formatting. You can use [DecimalStyle.of] to create a new instance, or use [DecimalStyle.STANDARD]
+     */
+    fun formatHeadlineDate(date: HijrahDate?, locale: Locale, decimalStyle: DecimalStyle = DecimalStyle.of(locale)): String? {
+        if (date == null) return null
+        return getOrCreateFormatter(selectedDateSkeleton, locale, decimalStyle).format(date)
     }
 
-    override fun formatMonthYear(monthMillis: Long?, locale: Locale): String? {
-        throw UnsupportedOperationException("This method is not supported for HijriDatePickerFormatter")
-    }
-
-    fun formatDate(date: HijrahDate?, locale: Locale, decimalStyle: DecimalStyle, forContentDescription: Boolean = false): String? {
+    /**
+     * Formats the given [date] using the [selectedDateSkeleton] and the provided [locale] and [decimalStyle].
+     *
+     * @param date The date to format. If null, this method will return null.
+     * @param locale The locale to use for formatting.
+     * @param decimalStyle The decimal style to use for formatting.
+     */
+    internal fun formatDate(date: HijrahDate?, locale: Locale, decimalStyle: DecimalStyle, forContentDescription: Boolean = false): String? {
 
         if (date == null) return null
         val skeleton = if (forContentDescription) selectedDateDescriptionSkeleton else selectedDateSkeleton
@@ -52,7 +46,7 @@ internal class HijriDatePickerFormatter(
         return getOrCreateFormatter(skeleton, locale, decimalStyle).format(date)
     }
 
-    fun formatInputDateWithoutDelimiters(date: HijrahDate?, locale: Locale, decimalStyle: DecimalStyle): String? {
+    internal fun formatInputDateWithoutDelimiters(date: HijrahDate?, locale: Locale, decimalStyle: DecimalStyle): String? {
         if (date == null) return null
         return getOrCreateFormatter(
             skeleton = inputDateSkeleton.replace(inputDateDelimiter.toString(), ""),
@@ -62,12 +56,12 @@ internal class HijriDatePickerFormatter(
         ).format(date)
     }
 
-    fun formatMonthYear(date: HijrahDate?, locale: Locale, decimalStyle: DecimalStyle): String? {
+    internal fun formatMonthYear(date: HijrahDate?, locale: Locale, decimalStyle: DecimalStyle): String? {
         if (date == null) return null
-        return getOrCreateFormatter(yearSelectionSkeleton, locale, decimalStyle).format(date)
+        return getOrCreateFormatter(yearMonthSelectionSkeleton, locale, decimalStyle).format(date)
     }
 
-    fun parseDateWithoutDelimiters(text: String, locale: Locale, decimalStyle: DecimalStyle): Result<HijrahDate> {
+    internal fun parseDateWithoutDelimiters(text: String, locale: Locale, decimalStyle: DecimalStyle): Result<HijrahDate> {
         val formatter = getOrCreateFormatter(inputDateSkeleton, locale, decimalStyle, false)
 
         val text = text.toMutableList().apply {
