@@ -22,12 +22,9 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.DatePickerColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.text.style.TextAlign
 import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates.withDayOfMonth
 import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates.year
 import com.abdulrahman_b.hijridatepicker.*
@@ -190,15 +187,9 @@ internal fun Month(
                     } else {
                         formattedDateDescription
                     },
-                colors = colors
-            ) {
-                Text(
-                    text = dayNumber.toLocalString(),
-                    // The semantics are set at the Day level.
-                    modifier = Modifier.clearAndSetSemantics {},
-                    textAlign = TextAlign.Center
-                )
-            }
+                colors = colors,
+                dayNumber = dayNumber
+            )
         }
 
         FillRemainingOfRow(daysFromStartOfWeekToFirstOfMonth + numberOfDays, DAYS_IN_WEEK)

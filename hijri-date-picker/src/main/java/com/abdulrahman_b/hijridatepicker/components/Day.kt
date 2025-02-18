@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.material3.DatePickerColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,9 +32,11 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.text
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import com.abdulrahman_b.hijridatepicker.R
 import com.abdulrahman_b.hijridatepicker.dayContainerColor
 import com.abdulrahman_b.hijridatepicker.dayContentColor
+import com.abdulrahman_b.hijridatepicker.toLocalString
 import com.abdulrahman_b.hijridatepicker.tokens.DatePickerModalTokens
 
 
@@ -49,7 +52,7 @@ internal fun Day(
     inRange: Boolean,
     description: String,
     colors: DatePickerColors,
-    content: @Composable () -> Unit
+    dayNumber: Int,
 ) {
     Surface(
         selected = selected,
@@ -97,7 +100,7 @@ internal fun Day(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            content()
+            Text(text = dayNumber.toLocalString(), textAlign = TextAlign.Center)
         }
     }
 }
