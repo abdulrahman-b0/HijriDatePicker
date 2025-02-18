@@ -126,14 +126,14 @@ Add the following to your build script:
 #### Kotlin DSL
 ```build.gradle.kts
 dependencies {
-    implementation("com.abdulrahman-b.hijridatepicker:hijridatepicker:1.0.0-alpha02")
+    implementation("com.abdulrahman-b.hijridatepicker:hijridatepicker:1.0.0-beta01")
 }
 ```
 
 #### Groovy DSL
 ```build.gradle
 dependencies {
-    implementation "com.abdulrahman-b.hijridatepicker:hijridatepicker:1.0.0-alpha02"
+    implementation "com.abdulrahman-b.hijridatepicker:hijridatepicker:1.0.0-beta01"
 }
 ```
 
