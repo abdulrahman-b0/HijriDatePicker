@@ -100,19 +100,6 @@ mavenPublishing {
     signAllPublications()
 }
 
-publishing {
-    repositories {
-        maven("https://maven.abdulrahman-b.com/releases") {
-            name = "Reposilite"
-            credentials {
-                this.username = globalGradleProperties.getProperty("reposilite.username")
-                this.password = globalGradleProperties.getProperty("reposilite.password")
-            }
-        }
-    }
-}
-
-
 private fun Project.configurePom(target: MavenPom) = with(target) {
     name = gradleProperties.getProperty("project.name")
     description = gradleProperties.getProperty("project.description")
