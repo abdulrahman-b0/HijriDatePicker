@@ -82,6 +82,7 @@ fun HijriDatePicker(
     modifier: Modifier = Modifier,
     dateFormatter: HijriDatePickerFormatter = remember { HijriDatePickerDefaults.dateFormatter() },
     firstDayOfWeek: DayOfWeek = DayOfWeek.SATURDAY,
+    dayOfWeekStyle: java.time.format.TextStyle = java.time.format.TextStyle.SHORT,
     title: (@Composable () -> Unit)? = {
         HijriDatePickerDefaults.DatePickerTitle(
             displayMode = state.displayMode,
@@ -108,6 +109,7 @@ fun HijriDatePicker(
         LocalPickerDecimalStyle provides decimalStyle,
         LocalPickerFormatter provides dateFormatter,
         LocalFirstDayOfWeek provides firstDayOfWeek,
+        LocalDayOfWeekTextStyle provides dayOfWeekStyle
     ) {
         DateEntryContainer(
             modifier = modifier,

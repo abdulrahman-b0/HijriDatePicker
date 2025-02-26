@@ -5,6 +5,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import java.time.DayOfWeek
 import java.time.format.DecimalStyle
+import java.time.format.TextStyle
 import java.util.*
 
 internal val LocalPickerLocale = compositionLocalOf<Locale> {
@@ -23,4 +24,8 @@ internal val LocalPickerFormatter = staticCompositionLocalOf<HijriDatePickerForm
 @OptIn(ExperimentalMaterial3Api::class)
 internal val LocalFirstDayOfWeek = staticCompositionLocalOf<DayOfWeek> {
     error("No LocalFirstDayOfWeek provided")
+}
+
+internal val LocalDayOfWeekTextStyle = staticCompositionLocalOf<TextStyle> {
+    error("No LocalDayOfWeekTextStyle provided")
 }
