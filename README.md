@@ -1,119 +1,170 @@
 # Hijri Date Picker
 
-[//]: # ([![Version]&#40;https://img.shields.io/badge/Version-1.0.0alpha01-puregreen.svg&#41;]&#40;&#41;)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.1.0-purple.svg?logo=kotlin)]()
-[![Java](https://img.shields.io/badge/java-11-orange.svg?logo=java)]()
-[![Donation](https://img.shields.io/badge/Donation-PayPal-blue.svg?logo=paypal)](https://www.paypal.com/paypalme/AbdulrahmanBahamel)
+[![Java](https://img.shields.io/badge/Java-11-orange.svg?logo=java)]()
+[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg?logo=paypal)](https://www.paypal.com/paypalme/AbdulrahmanBahamel)
 
-A modern and customizable Hijri Date Picker for Android, built with Jetpack Compose and inspired by the Material3 Date
-Picker.
+A modern and customizable Hijri Date Picker for Android, built with Jetpack Compose and inspired by the Material3 Date Picker.
 
-The Hijri Date Picker allows users to select a date in the Hijri calendar with ease. It is designed to be simple,
-flexible, and customizable, making it easy for developers to integrate into their apps and tailor to their needs. This
-library addresses the lack of up-to-date and modern date pickers that support the Hijri calendar, providing a
-high-quality solution for Muslim users.
+The **Hijri Date Picker** allows users to select dates in the **Hijri calendar** with ease. It's designed to be **simple, flexible, and customizable**, making it easy for developers to integrate into their apps. This library fills the gap for modern, high-quality date pickers with Hijri calendar support, providing a seamless experience for Muslim users.
 
-![Hijri Date Picker](screenshots/hijridatepicker-picker-ar.jpg)
-![Hijri Date Picker](screenshots/hijridatepicker-picker-en.jpg)
+---
 
-![Hijri Date Picker](screenshots/hijridatepicker-rangepicker-ar.jpg)
-![Hijri Date Picker](screenshots/hijridatepicker-rangepicker-en.jpg)\
+## Screenshots
 
-![Hijri Date Picker](screenshots/hijridatepicker-rangeinput-ar.jpg)
-![Hijri Date Picker](screenshots/hijridatepicker-input-en.jpg)
+Here are examples of the **Hijri Date Picker** in action:
 
+Date Picker (Arabic/English):
+
+![Hijri Date Picker AR](screenshots/hijridatepicker-picker-ar.jpg)![Hijri Date Picker EN](screenshots/hijridatepicker-picker-en.jpg)
+
+Date Range Picker (Arabic/English):
+
+![Hijri Date Range Picker AR](screenshots/hijridatepicker-rangepicker-ar.jpg)![Hijri Date Range Picker EN](screenshots/hijridatepicker-rangepicker-en.jpg)
+
+Text Input Variants (Arabic/English):
+
+![Input Range AR](screenshots/hijridatepicker-rangeinput-ar.jpg)![Input EN](screenshots/hijridatepicker-input-en.jpg)
+
+---
 
 ## Table of Contents
 
 - [Features](#features)
 - [Usage](#usage)
+  - [Single Date Selection](#single-date-picker-dialog)
+  - [Date Range Selection](#range-picker-dialog)
 - [Installation](#installation)
 - [Support Me](#support-me)
 
+---
+
 ## Features
 
-- **Modern Design**: The Hijri Date Picker is built on top of Material3 components, providing a modern and sleek design
-  that fits seamlessly into your app.
-- **Customizable**: The Hijri Date Picker is highly customizable, allowing you to change the colors, locale, and other
-  properties to match your app's theme.
-- **Date Range**: The Hijri Date Picker supports selecting a date range, allowing users to select a start and end date.
-- **Text Input**: The Hijri Date Picker includes a text input field that allows users to manually enter a date in the Hijri
-  calendar with validation to ensure the date is valid.
-- **Interoperability with Java Time API**: The Hijri Date Picker uses [HijrahDate](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/chrono/HijrahDate.html)
-  from the Java Time API to handle Hijri dates, ensuring accuracy and reliability.
+- **Modern Design**: Built with Material3 components, providing a sleek, responsive UI.
+- **Customizable**: Tailor colors, locales, and other properties to your app's theme.
+- **Date Range Support**: Users can select a start and end date seamlessly.
+- **Text Input Support**: Manually enter Hijri dates, with validation ensuring valid input.
+- **Integration with Java Time API**: Utilizes [HijrahDate](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/chrono/HijrahDate.html) from the Java Time library for precise Hijri date handling.
+
+---
 
 ## Usage
 
-The library provides two main components: `HijriDatePicker` and `HijriDateRangePicker`. As the names suggest, the former is used to select a single date, while the latter is used to select a date range.
-Both are pure content composable, they don't wrapped by dialog or bottom sheet, so you can use them in any way you want.
+The library provides two main components:
 
-Here's an example of how to use `HijriDatePicker` as a dialog:
+1. **HijriDatePicker**: For single date selection.
+2. **HijriDateRangePicker**: For selecting date ranges.
 
-```kotlin
-val datePickerState = rememberHijriDatePickerState(/* You can customize some properties */)
-var selectDateDialogOpen by remember { mutableStateOf(false) }
+Both are **Composable** components, allowing you to use them as dialogs, bottom sheets, or standalone elements.
 
-if (selectDateDialogOpen) {
-    DatePickerDialog(
-        onDismissRequest = { selectDateDialogOpen = false },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    datePickerState.selectedDate?.let { date: HijrahDate ->
-                       //Do something with the selected date
-                    }
-                    selectDateDialogOpen = false
-                },
-                content = { Text(stringResource(R.string.ok)) }
-            )
-        },
-    ) {
-        HijriDatePicker(state = datePickerState, /* You can customize some appearance properties */)
-    }
-}
+### Single Date Picker Dialog
 
-/*
- * Other code, You can show the dialog by setting `selectDateDialogOpen` to true on a button click or any other event
- */
-```
-
-And here's an example of how to use `HijriDateRangePicker` as a dialog:
+Here’s how to set up the **HijriDatePicker** for selecting a single date:
 
 ```kotlin
-val datePickerState = rememberHijriDateRangePickerState(/* You can customize some properties */)
-var selectDateDialogOpen by remember { mutableStateOf(false) }
+@Composable
+fun DatePickerExample() {
+  val datePickerState = rememberHijriDatePickerState(
+    initialSelectedDate = HijrahDate.now(), // Default selected date (optional)
+    selectableDates = HijriSelectableDates { date ->
+      // Allow all dates, but customize this to restrict selectable dates
+      true
+    },
+    initialDisplayMode = DisplayMode.Picker // Start in calendar view (default is Picker)
+  )
 
-if (selectDateDialogOpen) {
+  var selectDateDialogOpen by remember { mutableStateOf(false) }
+
+  // Render the HijriDatePicker inside a dialog when `selectDateDialogOpen` is true
+  if (selectDateDialogOpen) {
     DatePickerDialog(
-        onDismissRequest = { selectDateDialogOpen = false },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    val selectedRange: SelectedDateRange? = datePickerState.getSelectedDateRange()
-                    selectedRange?.let { range: SelectedDateRange ->
-                        //Do something with the selected date range
-                    }
-                    selectDateDialogOpen = false
-                },
-                content = { Text(stringResource(R.string.ok)) }
-            )
-        },
+      onDismissRequest = { selectDateDialogOpen = false },
+      confirmButton = {
+        TextButton(
+          onClick = {
+            datePickerState.selectedDate?.let { date: HijrahDate ->
+              // Do something with the selected date
+            }
+            selectDateDialogOpen = false
+          },
+          content = { Text(stringResource(R.string.ok)) }
+        )
+      },
     ) {
-        HijriDateRangePicker(state = datePickerState /* You can customize some appearance properties */)
+      HijriDatePicker(
+        state = datePickerState,
+        /* You can customize some appearance properties */
+      )
     }
+  }
+  
+  /*
+   * Other code, You can show the dialog by setting `selectDateDialogOpen` to true on a button click or any other event
+   */
 }
-
-/*
- * Other code, You can show the dialog by setting `selectDateDialogOpen` to true on a button click or any other event
- */
 ```
+
+---
+
+### Range Picker Dialog
+
+Here’s an example of how to implement a **HijriDateRangePicker** for selecting a date range:
+
+```kotlin
+@Composable
+fun DateRangePickerExample() {
+    var selectRangeDialogOpen by remember { mutableStateOf(false) }
+
+    // State to manage the selected Hijri date range
+    val rangePickerState = rememberHijriDateRangePickerState(
+        initialSelectedRange = null, // Optional: Pre-select a date range
+        selectableDates = HijriSelectableDates { date ->
+            // Optional: Implement your own selectable date logic
+            true // Select all dates for the range
+        },
+        //Other params ...
+    )
+    // Render the HijriDateRangePicker inside a dialog when `selectRangeDialogOpen` is true
+  if (selectDateDialogOpen) {
+    DatePickerDialog(
+      onDismissRequest = { selectDateDialogOpen = false },
+      confirmButton = {
+        TextButton(
+          onClick = {
+            val selectedRange: SelectedDateRange? = datePickerState.getSelectedDateRange()
+            selectedRange?.let { range: SelectedDateRange ->
+              //Do something with the selected date range
+            }
+            selectDateDialogOpen = false
+          },
+          content = { Text(stringResource(R.string.ok)) }
+        )
+      },
+    ) {
+      HijriDateRangePicker(state = datePickerState /* You can customize some appearance properties */)
+    }
+  }
+
+  /*
+   * Other code, You can show the dialog by setting `selectDateDialogOpen` to true on a button click or any other event
+   */
+}
+```
+
+---
 
 ## Installation
 
-This library requires Jetpack Compose and Material3 components, so make sure you have them set up in your project.
-The library also requires minimum sdk of 26, and JDK 11 or higher to build and run the dependencies.
+### Requirements
 
-- Add the Maven Central repository if it is not already there:
+- **Jetpack Compose** and **Material3** libraries.
+- Minimum SDK: **26**
+- JDK: **11 or above**
+
+### Setup
+
+Step 1: Add the Maven Central repository (if not present):
 
 ```kotlin
 repositories {
@@ -121,24 +172,30 @@ repositories {
 }
 ```
 
-Add the following to your build script:
+Step 2: Add the library dependency:
 
-#### Kotlin DSL
-```build.gradle.kts
+#### Kotlin DSL:
+
+```kotlin
 dependencies {
-    implementation("com.abdulrahman-b.hijridatepicker:hijridatepicker:1.0.0-beta01")
+    implementation("com.abdulrahman-b.hijridatepicker:hijridatepicker:1.0.0-beta02")
 }
 ```
 
-#### Groovy DSL
-```build.gradle
+#### Groovy DSL:
+
+```groovy
 dependencies {
-    implementation "com.abdulrahman-b.hijridatepicker:hijridatepicker:1.0.0-beta01"
+    implementation "com.abdulrahman-b.hijridatepicker:hijridatepicker:1.0.0-beta02"
 }
 ```
+
+---
 
 ## Support Me
 
-If you like the project and want to support me, you can do so via [PayPal](https://www.paypal.com/paypalme/AbdulrahmanBahamel). Your contributions are greatly appreciated! Thank you for your support!
+If you find this project helpful, please support me! Donations are greatly appreciated:
 
+[![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-blue.svg?logo=paypal)](https://www.paypal.com/paypalme/AbdulrahmanBahamel)
 
+Thank you for your contributions!

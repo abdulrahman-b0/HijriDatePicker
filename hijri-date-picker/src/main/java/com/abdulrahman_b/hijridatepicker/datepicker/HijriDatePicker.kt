@@ -69,6 +69,8 @@ import java.util.*
  * @param showModeToggle A boolean indicating if this DatePicker should show a mode toggle action that
  *   transforms it into a date input. The default value is true.
  * @param colors [DatePickerColors] that will be used to resolve the colors used for this date picker
+ * @param dayOfWeekStyle The text style used for displaying day-of-week labels. Defaults to [java.time.format.TextStyle.SHORT].
+ *
  *   in different states. The default value is provided by [DatePickerDefaults.colors].
  * @param locale The locale used to format the date and day of weeks. The default value is the first locale in the current configuration.
  * @param decimalStyle The [DecimalStyle] used to format the date. The default value is the decimal style of the provided locale.
@@ -82,6 +84,7 @@ fun HijriDatePicker(
     modifier: Modifier = Modifier,
     dateFormatter: HijriDatePickerFormatter = remember { HijriDatePickerDefaults.dateFormatter() },
     firstDayOfWeek: DayOfWeek = DayOfWeek.SATURDAY,
+    dayOfWeekStyle: java.time.format.TextStyle = java.time.format.TextStyle.SHORT,
     title: (@Composable () -> Unit)? = {
         HijriDatePickerDefaults.DatePickerTitle(
             displayMode = state.displayMode,
@@ -108,6 +111,7 @@ fun HijriDatePicker(
         LocalPickerDecimalStyle provides decimalStyle,
         LocalPickerFormatter provides dateFormatter,
         LocalFirstDayOfWeek provides firstDayOfWeek,
+        LocalDayOfWeekTextStyle provides dayOfWeekStyle
     ) {
         DateEntryContainer(
             modifier = modifier,

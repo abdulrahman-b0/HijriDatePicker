@@ -57,6 +57,7 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.chrono.HijrahDate
 import java.time.format.DecimalStyle
+import java.time.format.TextStyle
 import java.util.*
 /**
  * HijriDateRangePicker is a composable function that provides a date range picker for selecting a range of dates
@@ -71,6 +72,7 @@ import java.util.*
  * @param title A composable function that defines the title to be displayed in the date range picker. Defaults to a standard title.
  * @param headline A composable function that defines the headline to be displayed in the date range picker. Defaults to a standard headline.
  * @param firstDayOfWeek The first day of the week to be displayed in the calendar. Defaults to [DayOfWeek.SATURDAY].
+ * @param dayOfWeekTextStyle The text style used for displaying day-of-week labels. Defaults to [java.time.format.TextStyle.SHORT].
  * @param locale The locale to be used for formatting dates. Defaults to the current locale.
  * @param decimalStyle The decimal style to be used for formatting dates. Defaults to the decimal style of the current locale.
  * @param showModeToggle Indicates if this DateRangePicker should show a mode toggle action that transforms it into a date range input. Defaults to true.
@@ -97,6 +99,7 @@ fun HijriDateRangePicker(
         )
     },
     firstDayOfWeek: DayOfWeek = DayOfWeek.SATURDAY,
+    dayOfWeekTextStyle: TextStyle = TextStyle.SHORT,
     locale: Locale = LocalConfiguration.current.locales[0],
     decimalStyle: DecimalStyle = DecimalStyle.of(locale),
     showModeToggle: Boolean = true,
@@ -109,7 +112,8 @@ fun HijriDateRangePicker(
         LocalPickerFormatter provides dateFormatter,
         LocalPickerLocale provides locale,
         LocalPickerDecimalStyle provides decimalStyle,
-        LocalFirstDayOfWeek provides firstDayOfWeek
+        LocalFirstDayOfWeek provides firstDayOfWeek,
+        LocalDayOfWeekTextStyle provides dayOfWeekTextStyle,
     ) {
         DateEntryContainer(
             modifier = modifier,

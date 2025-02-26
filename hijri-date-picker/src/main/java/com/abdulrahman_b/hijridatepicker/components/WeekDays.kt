@@ -32,24 +32,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.util.fastForEach
+import com.abdulrahman_b.hijridatepicker.LocalDayOfWeekTextStyle
 import com.abdulrahman_b.hijridatepicker.LocalFirstDayOfWeek
 import com.abdulrahman_b.hijridatepicker.LocalPickerLocale
 import com.abdulrahman_b.hijridatepicker.datepicker.RecommendedSizeForAccessibility
 import com.abdulrahman_b.hijridatepicker.tokens.DatePickerModalTokens
 import java.time.DayOfWeek
+import java.time.format.TextStyle
 
 /** Composes the weekdays letters. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun WeekDays(
     colors: DatePickerColors,
-    firstDayOfWeek: DayOfWeek = LocalFirstDayOfWeek.current
+    firstDayOfWeek: DayOfWeek = LocalFirstDayOfWeek.current,
+    dayOfWeekTextStyle: TextStyle = LocalDayOfWeekTextStyle.current
 ) {
     val locale = LocalPickerLocale.current
     val firstDayOfWeek = firstDayOfWeek.value
     val weekdays = DayOfWeek.entries.map {
-        it.getDisplayName(java.time.format.TextStyle.FULL, locale) to it.getDisplayName(java.time.format.TextStyle.SHORT, locale)
+        it.getDisplayName(TextStyle.FULL, locale) to it.getDisplayName(dayOfWeekTextStyle, locale)
     }
     val dayNames = arrayListOf<Pair<String, String>>()
     // Start with firstDayOfWeek - 1 as the days are 1-based.
@@ -82,6 +86,7 @@ internal fun WeekDays(
                     modifier = Modifier.wrapContentSize(),
                     color = colors.weekdayContentColor,
                     style = textStyle,
+                    overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center
                 )
             }
