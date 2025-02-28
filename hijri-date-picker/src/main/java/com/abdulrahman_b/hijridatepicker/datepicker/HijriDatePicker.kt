@@ -74,7 +74,7 @@ import java.util.*
  *   in different states. The default value is provided by [DatePickerDefaults.colors].
  * @param locale The locale used to format the date and day of weeks. The default value is the first locale in the current configuration.
  * @param decimalStyle The [DecimalStyle] used to format the date. The default value is the decimal style of the provided locale.
- * This is useful if you want to use a different decimal style than the default locale.
+ * But if you want the numbers to be in the style `012345679` always regardless of the locale, then you should pass [DecimalStyle.STANDARD]
  *
  */
 @ExperimentalMaterial3Api

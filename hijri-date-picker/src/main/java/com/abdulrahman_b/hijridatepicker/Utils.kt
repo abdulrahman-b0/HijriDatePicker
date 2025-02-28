@@ -37,6 +37,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import com.abdulrahman_b.hijridatepicker.datepicker.DAYS_IN_WEEK
 import com.abdulrahman_b.hijridatepicker.datepicker.RecommendedSizeForAccessibility
 import com.abdulrahman_b.hijridatepicker.tokens.MotionTokens
 import java.time.DayOfWeek
@@ -205,7 +206,7 @@ internal fun calculateDaysFromStartOfWeekToFirstOfMonth(
     val difference = weekDayOfFirstDayInMonth - firstDayOfWeek
 
     return if (difference < 0) {
-        difference + 7
+        difference + DAYS_IN_WEEK
     } else {
         difference
     }
@@ -228,25 +229,6 @@ internal fun Int.toLocalString(locale: Locale, decimalStyle: DecimalStyle): Stri
 
     return String.format(formattingLocale, "%d", this)
 }
-
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun FlowRowScope.FillRemainingOfRow(lastItemPosition: Int, maxItemsPerRow: Int) {
-
-    val itemsCountInLastRow = lastItemPosition % maxItemsPerRow
-    val itemsToFill = (maxItemsPerRow - itemsCountInLastRow).takeUnless { itemsCountInLastRow == 0 } ?: 0
-
-    repeat(itemsToFill) {
-        Spacer(
-            modifier = Modifier.requiredSize(
-                width = RecommendedSizeForAccessibility,
-                height = RecommendedSizeForAccessibility
-            )
-        )
-    }
-}
-
 
 internal fun DisplayMode.Companion.valueOf(value: String): DisplayMode {
     return when (value) {

@@ -142,6 +142,16 @@ internal class DateInputValidator(
 }
 
 
+/**
+ * Creates and remembers a [DateInputValidator] instance for validating date input fields in a Hijri date picker.
+ *
+ * @param dateInputFormat an instance of [DateInputFormat] that provides the date patterns and delimiters for validation
+ * @param yearRange an [IntRange] specifying the valid range of years for the date input
+ * @param selectableDates an implementation of [HijriSelectableDates] to determine the selectability of specific dates and years
+ * @param errorInvalidRangeInput a string for displaying an error message when a range input start date is after the end date,
+ *   or the end date is before the start date
+ * @return a [DateInputValidator] instance configured with the specified parameters
+ */
 @Composable
 internal fun rememberDateInputValidator(
     dateInputFormat: DateInputFormat,
