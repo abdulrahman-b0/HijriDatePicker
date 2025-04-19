@@ -113,7 +113,7 @@ publishing {
 }
 
 
-private fun Project.configurePom(target: MavenPom) = with(target) {
+private fun configurePom(target: MavenPom) = with(target) {
     name = gradleProperties.getProperty("project.name")
     description = gradleProperties.getProperty("project.description")
     url = gradleProperties.getProperty("project.url")
