@@ -18,6 +18,7 @@ package com.abdulrahman_b.hijridatepicker.rangedatepicker
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.unit.IntOffset
+import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates.dayOfMonth
 import com.abdulrahman_b.hijridatepicker.calculateDaysFromStartOfWeekToFirstOfMonth
 import com.abdulrahman_b.hijridatepicker.datepicker.DAYS_IN_WEEK
 import java.time.chrono.HijrahDate
@@ -66,13 +67,13 @@ internal class SelectedRangeInfo(
             val lastIsSelectionEnd = endDate <= displayedMonthEnd
             val startGridItemOffset =
                 if (firstIsSelectionStart) {
-                    displayedMonthDaysFromStartOfWeekToFirstOfMonth + startDate.get(ChronoField.DAY_OF_MONTH) - 1
+                    displayedMonthDaysFromStartOfWeekToFirstOfMonth + startDate.dayOfMonth - 1
                 } else {
                     displayedMonthDaysFromStartOfWeekToFirstOfMonth
                 }
             val endGridItemOffset =
                 if (lastIsSelectionEnd) {
-                    displayedMonthDaysFromStartOfWeekToFirstOfMonth + endDate.get(ChronoField.DAY_OF_MONTH) - 1
+                    displayedMonthDaysFromStartOfWeekToFirstOfMonth + endDate.dayOfMonth - 1
                 } else {
                     displayedMonthDaysFromStartOfWeekToFirstOfMonth + displayedMonthNumberOfDays - 1
                 }

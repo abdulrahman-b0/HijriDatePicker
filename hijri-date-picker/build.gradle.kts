@@ -100,7 +100,20 @@ mavenPublishing {
     signAllPublications()
 }
 
-private fun Project.configurePom(target: MavenPom) = with(target) {
+publishing {
+    repositories {
+        maven("https://maven.abdulrahman-b.com/releases") {
+            name = "Reposilite"
+            credentials {
+                this.username = globalGradleProperties.getProperty("reposilite.username")
+                this.password = globalGradleProperties.getProperty("reposilite.password")
+            }
+        }
+    }
+}
+
+
+private fun configurePom(target: MavenPom) = with(target) {
     name = gradleProperties.getProperty("project.name")
     description = gradleProperties.getProperty("project.description")
     url = gradleProperties.getProperty("project.url")
@@ -113,9 +126,9 @@ private fun Project.configurePom(target: MavenPom) = with(target) {
 
     developers {
         developer {
-            id = globalGradleProperties.getProperty("developer.id")
-            name = globalGradleProperties.getProperty("developer.name")
-            email = globalGradleProperties.getProperty("developer.email")
+            id = gradleProperties.getProperty("developer.id")
+            name = gradleProperties.getProperty("developer.name")
+            email = gradleProperties.getProperty("developer.email")
         }
     }
 
