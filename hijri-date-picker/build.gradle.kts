@@ -126,9 +126,9 @@ private fun configurePom(target: MavenPom) = with(target) {
 
     developers {
         developer {
-            id = globalGradleProperties.getProperty("developer.id")
-            name = globalGradleProperties.getProperty("developer.name")
-            email = globalGradleProperties.getProperty("developer.email")
+            id = gradleProperties.getProperty("developer.id")
+            name = gradleProperties.getProperty("developer.name")
+            email = gradleProperties.getProperty("developer.email")
         }
     }
 
