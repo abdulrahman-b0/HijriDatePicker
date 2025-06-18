@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.IntOffset
 import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates.dayOfMonth
 import com.abdulrahman_b.hijridatepicker.calculateDaysFromStartOfWeekToFirstOfMonth
 import com.abdulrahman_b.hijridatepicker.datepicker.DAYS_IN_WEEK
+import java.time.DayOfWeek
 import java.time.chrono.HijrahDate
-import java.time.temporal.ChronoField
 import java.time.temporal.TemporalAdjusters
 
 /**
@@ -48,14 +48,15 @@ internal class SelectedRangeInfo(
         fun calculateRangeInfo(
             displayedMonth: HijrahDate,
             startDate: HijrahDate,
-            endDate: HijrahDate
+            endDate: HijrahDate,
+            firstDayOfWeek: DayOfWeek
         ): SelectedRangeInfo? {
 
             val displayedMonthStart = displayedMonth.with(TemporalAdjusters.firstDayOfMonth())
             val displayedMonthEnd = displayedMonth.with(TemporalAdjusters.lastDayOfMonth())
             val displayedMonthNumberOfDays = displayedMonth.lengthOfMonth()
             val displayedMonthDaysFromStartOfWeekToFirstOfMonth =
-                calculateDaysFromStartOfWeekToFirstOfMonth(displayedMonth)
+                calculateDaysFromStartOfWeekToFirstOfMonth(displayedMonth, firstDayOfWeek)
 
             if (
                 startDate > displayedMonthEnd ||

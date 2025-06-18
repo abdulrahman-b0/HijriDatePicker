@@ -18,6 +18,7 @@
 
 package com.abdulrahman_b.hijridatepicker
 
+import android.R.attr.firstDayOfWeek
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -37,6 +38,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates.dayOfWeek
+import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates.withDayOfMonth
 import com.abdulrahman_b.hijridatepicker.datepicker.DAYS_IN_WEEK
 import com.abdulrahman_b.hijridatepicker.datepicker.RecommendedSizeForAccessibility
 import com.abdulrahman_b.hijridatepicker.tokens.MotionTokens
@@ -198,18 +201,17 @@ internal fun calculateTotalPages(yearsRange: IntRange): Int {
 }
 
 internal fun calculateDaysFromStartOfWeekToFirstOfMonth(
-    displayedMonth: HijrahDate
+    displayedMonth: HijrahDate,
+    firstDayOfWeek: DayOfWeek,
 ): Int {
-    val weekDayOfFirstDayInMonth = displayedMonth.get(ChronoField.DAY_OF_WEEK)
-    val firstDayOfWeek = DayOfWeek.SATURDAY.value
+    val firstOfMonth = displayedMonth.withDayOfMonth(1)
+    val firstOfMonthDayOfWeek = firstOfMonth.dayOfWeek
 
-    val difference = weekDayOfFirstDayInMonth - firstDayOfWeek
+    val startIndex = firstDayOfWeek.ordinal //6
+    val dayIndex = firstOfMonthDayOfWeek.ordinal //3
 
-    return if (difference < 0) {
-        difference + DAYS_IN_WEEK
-    } else {
-        difference
-    }
+    return (dayIndex - startIndex + 7) % 7
+
 }
 
 @Composable
