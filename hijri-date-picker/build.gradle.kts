@@ -72,7 +72,7 @@ tasks.withType<Test> {
 }
 
 val gradleProperties = Properties().apply {
-    load(File("gradle.properties").reader())
+    load(file("../gradle.properties").reader())
 }
 val globalGradleProperties = Properties().apply {
     val userHome = gradle.gradleUserHomeDir
