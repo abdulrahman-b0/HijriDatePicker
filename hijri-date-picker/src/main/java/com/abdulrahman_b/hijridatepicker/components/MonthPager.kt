@@ -186,8 +186,8 @@ internal fun Month(
                                     // date itself is specifically not allowed by the state's
                                     // SelectableDates.
                                     with(selectableDates) {
-                                        isSelectableYear(displayedMonth.year) &&
-                                                isSelectableDate(displayedMonth)
+                                        isSelectableYear(date.year) &&
+                                                isSelectableDate(date)
                                     }
                                 },
                             today = isToday,
