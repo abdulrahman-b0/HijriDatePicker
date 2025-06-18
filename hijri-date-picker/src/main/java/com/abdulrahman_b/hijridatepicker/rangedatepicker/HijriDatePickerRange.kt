@@ -260,6 +260,7 @@ private fun VerticalMonthsList(
 ) {
     val today = HijrahDate.now()
     val dateFormatter = LocalPickerFormatter.current
+    val firstDayOfWeek = LocalFirstDayOfWeek.current
 
     ProvideTextStyle(DatePickerModalTokens.DateLabelTextFont) {
         val coroutineScope = rememberCoroutineScope()
@@ -313,7 +314,8 @@ private fun VerticalMonthsList(
                             SelectedRangeInfo.calculateRangeInfo(
                                 displayedMonth = displayedMonth,
                                 startDate = selectedStartDate,
-                                endDate = selectedEndDate
+                                endDate = selectedEndDate,
+                                firstDayOfWeek = firstDayOfWeek
                             )
                         }
                     } else {

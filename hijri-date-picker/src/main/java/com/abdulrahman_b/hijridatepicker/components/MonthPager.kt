@@ -98,8 +98,9 @@ internal fun Month(
     colors: DatePickerColors
 ) {
     val dateFormatter = LocalPickerFormatter.current
+    val firstDayOfWeek = LocalFirstDayOfWeek.current
     val daysFromStartOfWeekToFirstOfMonth = remember(displayedMonth) {
-        calculateDaysFromStartOfWeekToFirstOfMonth(displayedMonth)
+        calculateDaysFromStartOfWeekToFirstOfMonth(displayedMonth, firstDayOfWeek)
     }
 
     val numberOfDays = remember(displayedMonth) {
