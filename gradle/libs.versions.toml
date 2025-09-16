@@ -1,19 +1,21 @@
 [versions]
-agp = "8.9.3"
-hijrahdatetime = "1.0.1"
-kotlin = "2.1.20"
-coreKtx = "1.16.0"
+agp = "8.11.1"
+hijrahdatetime = "1.1.0"
+kotlin = "2.2.20"
+coreKtx = "1.17.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.9.1"
-activityCompose = "1.10.1"
-composeBom = "2025.06.00"
+lifecycleRuntimeKtx = "2.9.2"
+activityCompose = "1.11.0"
+composeBom = "2025.09.00"
 material = "1.12.0"
 junit5 = "5.12.0"
+appcompat = "1.7.1"
+constraintlayout = "2.2.1"
 
 [libraries]
-hijrahdatetime = { module = "com.abdulrahman-b:HijrahDateTime", version.ref = "hijrahdatetime" }
+hijrahdatetime = { module = "com.abdulrahman-b.hijrahdatetime:hijrahdatetime", version.ref = "hijrahdatetime" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -33,6 +35,8 @@ junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.re
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit5" }
 #Mockk
 mockk = { group = "io.mockk", name = "mockk", version = "1.13.16" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

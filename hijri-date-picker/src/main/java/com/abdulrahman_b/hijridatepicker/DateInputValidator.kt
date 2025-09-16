@@ -121,10 +121,10 @@ internal class DateInputValidator(
                     (inputIdentifier == InputIdentifier.EndDateInput && date < (currentStartDate ?: HijrahDates.MIN))
                 ) {
                     // The start date is after the end date, or the end date is before the start date.
-                    return errorInvalidRangeInput
+                    return@fold errorInvalidRangeInput
                 }
 
-                return ""
+                return@fold ""
             },
             onFailure = { exception ->
                 // Handle parsing exceptions and return appropriate error messages.

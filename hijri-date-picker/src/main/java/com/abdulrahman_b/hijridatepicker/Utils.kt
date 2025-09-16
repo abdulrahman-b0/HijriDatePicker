@@ -18,36 +18,20 @@
 
 package com.abdulrahman_b.hijridatepicker
 
-import android.R.attr.firstDayOfWeek
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.material3.DatePickerColors
-import androidx.compose.material3.DisplayMode
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Modifier
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates.dayOfWeek
 import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates.withDayOfMonth
-import com.abdulrahman_b.hijridatepicker.datepicker.DAYS_IN_WEEK
-import com.abdulrahman_b.hijridatepicker.datepicker.RecommendedSizeForAccessibility
 import com.abdulrahman_b.hijridatepicker.tokens.MotionTokens
 import java.time.DayOfWeek
 import java.time.chrono.HijrahDate
 import java.time.format.DecimalStyle
 import java.time.temporal.ChronoField
-import java.util.Locale
+import java.util.*
 
 /**
  * [ProvideContentColorTextStyle]
