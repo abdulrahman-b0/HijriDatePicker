@@ -74,13 +74,45 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-val gradleProperties = Properties().apply {
-    load(file("../gradle.properties").reader())
+/**
+ * Loads properties from the given [path] if the file exists, otherwise returns
+ * an empty [Properties] instance.
+ *
+ * This allows the project to be built by anyone cloning the repository without
+ * requiring custom `gradle.properties` files in the project directory or the
+ * Gradle user home.
+ */
+fun loadPropertiesOrEmpty(path: File): Properties = Properties().apply {
+    if (path.exists()) {
+        path.reader().use { reader ->
+            load(reader)
+        }
+    }
 }
-val globalGradleProperties = Properties().apply {
-    val userHome = gradle.gradleUserHomeDir
-    load(File(userHome, "gradle.properties").reader())
-}
+
+/**
+ * Project-level Gradle properties used primarily to configure the published POM
+ * (name, description, URLs, etc.). When the corresponding `gradle.properties`
+ * file does not exist, these values will simply be absent and publishing can
+ * either provide defaults or be skipped.
+ */
+val gradleProperties: Properties = loadPropertiesOrEmpty(
+    rootProject.file("gradle.properties")
+)
+
+/**
+ * Global Gradle user properties, typically located under the Gradle user home
+ * directory (e.g. `~/.gradle/gradle.properties`). These are intended to hold
+ * private credentials such as repository usernames and passwords.
+ *
+ * If the file does not exist, the returned [Properties] is empty, which allows
+ * normal builds to succeed while disabling publishing that depends on those
+ * credentials.
+ */
+val globalGradleProperties: Properties = loadPropertiesOrEmpty(
+    File(gradle.gradleUserHomeDir, "gradle.properties")
+)
+
 
 mavenPublishing {
 
