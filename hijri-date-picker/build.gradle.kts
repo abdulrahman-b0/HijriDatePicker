@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.coreIcons)
     implementation(libs.material)
     testImplementation(libs.junit)
     testImplementation(kotlin("test-junit5"))
@@ -134,19 +135,6 @@ mavenPublishing {
 
     signAllPublications()
 }
-
-publishing {
-    repositories {
-        maven("https://maven.abdulrahman-b.com/releases") {
-            name = "Reposilite"
-            credentials {
-                this.username = globalGradleProperties.getProperty("reposilite.username")
-                this.password = globalGradleProperties.getProperty("reposilite.password")
-            }
-        }
-    }
-}
-
 
 private fun configurePom(target: MavenPom) = with(target) {
     name = gradleProperties.getProperty("project.name")
