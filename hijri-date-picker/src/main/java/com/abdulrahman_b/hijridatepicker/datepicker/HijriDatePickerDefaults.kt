@@ -16,14 +16,21 @@ package com.abdulrahman_b.hijridatepicker.datepicker
 * limitations under the License.
 */
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates
 import com.abdulrahman_b.hijridatepicker.*
@@ -83,6 +90,7 @@ object HijriDatePickerDefaults {
         when (displayMode) {
             DisplayMode.Companion.Picker ->
                 Text(text = (stringResource(R.string.date_picker_title)), modifier = modifier)
+
             DisplayMode.Companion.Input ->
                 Text(text = (stringResource(R.string.date_input_title)), modifier = modifier)
         }
@@ -157,5 +165,103 @@ object HijriDatePickerDefaults {
             }
         )
     }
+
+
+    /**
+     * A default date picker headline composable that displays a default headline text when there is
+     * no date selection, and an actual date string when there is.
+     *
+     * @param selectedDate a timestamp that represents the selected date _start_ of the day in
+     *   _UTC_ milliseconds from the epoch
+     * @param displayMode the current [DisplayMode]
+     * @param dateFormatter a [DatePickerFormatter]
+     * @param modifier a [Modifier] to be applied for the headline
+     */
+    @Composable
+    fun MultiDatePickerHeadline(
+        selectedDates: Set<HijrahDate>,
+        displayMode: DisplayMode,
+        modifier: Modifier = Modifier
+    ) {
+        val locale = LocalPickerLocale.current
+        val decimalStyle = LocalPickerDecimalStyle.current
+        val dateFormatter = LocalPickerFormatter.current
+
+        Column(modifier = modifier) {
+
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(40.dp, Alignment.Start)
+            ) {
+                if (selectedDates.isEmpty()) {
+                    item {
+                        val headlineText = stringResource(R.string.multi_date_picker_headline)
+                        Text(
+                            text = headlineText,
+                            modifier = Modifier.semantics {
+                                liveRegion = LiveRegionMode.Polite
+                                contentDescription = headlineText
+                            },
+                            maxLines = 1,
+                        )
+                    }
+                }
+                items(selectedDates.size) { index ->
+                    val selectedDate = selectedDates.elementAt(index)
+
+
+                    val formattedDate = dateFormatter.formatDate(
+                        date = selectedDate,
+                        locale = locale,
+                        decimalStyle = decimalStyle,
+                        forContentDescription = false
+                    )
+                    val verboseDateDescription = dateFormatter.formatDate(
+                        date = selectedDate,
+                        locale = locale,
+                        decimalStyle = decimalStyle,
+                        forContentDescription = true
+                    ) ?: when (displayMode) {
+                        DisplayMode.Companion.Picker -> stringResource(R.string.date_picker_no_selection_description)
+                        DisplayMode.Companion.Input -> stringResource(R.string.date_input_no_input_description)
+                        else -> ""
+                    }
+
+                    val headlineText = formattedDate ?: when (displayMode) {
+                        DisplayMode.Companion.Picker -> stringResource(R.string.multi_date_picker_headline)
+                        DisplayMode.Companion.Input -> stringResource(R.string.date_input_headline)
+                        else -> ""
+                    }
+
+                    val headlineDescription = when (displayMode) {
+                        DisplayMode.Companion.Picker -> stringResource(R.string.date_picker_headline_description)
+                        DisplayMode.Companion.Input -> stringResource(R.string.date_input_headline_description)
+                        else -> ""
+                    }.format(verboseDateDescription)
+
+
+                    Text(
+                        text = "* $headlineText",
+                        modifier = Modifier.semantics {
+                            liveRegion = LiveRegionMode.Polite
+                            contentDescription = headlineDescription
+                        },
+                        maxLines = 1,
+                    )
+                }
+            }
+
+
+            Text(
+                text = stringResource(R.string.__date_selected, selectedDates.size.toLocalString()),
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 1,
+            )
+        }
+
+
+    }
+
 
 }

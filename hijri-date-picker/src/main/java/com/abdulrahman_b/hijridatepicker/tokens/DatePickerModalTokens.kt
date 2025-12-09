@@ -30,6 +30,7 @@ internal object DatePickerModalTokens {
     val DateTodayContainerOutlineWidth = 1.0.dp
     val HeaderContainerHeight = 120.0.dp
     val HeaderHeadlineFont @Composable get() = MaterialTheme.typography.headlineLarge
+    val MultiDateHeaderHeadlineFont @Composable get() = MaterialTheme.typography.headlineSmall
     val HeaderSupportingTextFont @Composable get() = MaterialTheme.typography.labelLarge
     val RangeSelectionHeaderContainerHeight = 128.0.dp
     val RangeSelectionHeaderHeadlineFont @Composable get() = MaterialTheme.typography.titleLarge

@@ -195,8 +195,8 @@ fun HijriMultiDatePicker(
         )
     },
     headline: (@Composable () -> Unit)? = {
-        HijriDatePickerDefaults.DatePickerHeadline(
-            selectedDate = state.selectedDates.firstOrNull(),
+        HijriDatePickerDefaults.MultiDatePickerHeadline(
+            selectedDates = state.selectedDates,
             displayMode = state.displayMode,
             modifier = Modifier.padding(DatePickerHeadlinePadding)
         )
@@ -219,7 +219,7 @@ fun HijriMultiDatePicker(
             title = title,
             headline = headline,
             modeToggleButton = null,
-            headlineTextStyle = DatePickerModalTokens.HeaderHeadlineFont,
+            headlineTextStyle = DatePickerModalTokens.MultiDateHeaderHeadlineFont,
             headerMinHeight = DatePickerModalTokens.HeaderContainerHeight,
             colors = colors,
         ) {
