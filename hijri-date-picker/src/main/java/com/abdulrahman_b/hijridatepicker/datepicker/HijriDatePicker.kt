@@ -201,7 +201,6 @@ fun HijriMultiDatePicker(
             modifier = Modifier.padding(DatePickerHeadlinePadding)
         )
     },
-    showModeToggle: Boolean = false,
     locale: Locale = LocalConfiguration.current.locales[0],
     decimalStyle: DecimalStyle = DecimalStyle.of(locale),
     colors: DatePickerColors = DatePickerDefaults.colors(),
@@ -219,20 +218,7 @@ fun HijriMultiDatePicker(
             modifier = modifier,
             title = title,
             headline = headline,
-            modeToggleButton =
-                if (showModeToggle) {
-                    {
-                        DisplayModeToggleButton(
-                            modifier = Modifier.padding(DatePickerModeTogglePadding),
-                            displayMode = state.displayMode,
-                            onDisplayModeChange = { displayMode ->
-                                state.displayMode = displayMode
-                            },
-                        )
-                    }
-                } else {
-                    null
-                },
+            modeToggleButton = null,
             headlineTextStyle = DatePickerModalTokens.HeaderHeadlineFont,
             headerMinHeight = DatePickerModalTokens.HeaderContainerHeight,
             colors = colors,
@@ -240,7 +226,7 @@ fun HijriMultiDatePicker(
             MultiDatePickerContent(
                 selectedDates = state.selectedDates,
                 displayedMonth = state.displayedMonth,
-                displayMode = state.displayMode,
+                displayMode = DisplayMode.Picker,
                 onDateToggle = { date -> state.toggleDate(date) },
                 onDisplayedMonthChange = { month -> state.displayedMonth = month },
                 yearRange = state.yearRange,
@@ -510,20 +496,20 @@ private fun MultiDatePickerContent(
                 }
             }
 
-            // For now, the Input mode falls back to the same calendar content. This branch
-            // can be customized to provide a dedicated multi-date text input if required.
-            DisplayMode.Input -> {
-                MultiDatePickerContent(
-                    selectedDates = selectedDates,
-                    displayedMonth = displayedMonth,
-                    displayMode = DisplayMode.Picker,
-                    onDateToggle = onDateToggle,
-                    onDisplayedMonthChange = onDisplayedMonthChange,
-                    yearRange = yearRange,
-                    selectableDates = selectableDates,
-                    colors = colors
-                )
-            }
+//            // For now, the Input mode falls back to the same calendar content. This branch
+//            // can be customized to provide a dedicated multi-date text input if required.
+//            DisplayMode.Input -> {
+//                MultiDatePickerContent(
+//                    selectedDates = selectedDates,
+//                    displayedMonth = displayedMonth,
+//                    displayMode = DisplayMode.Picker,
+//                    onDateToggle = onDateToggle,
+//                    onDisplayedMonthChange = onDisplayedMonthChange,
+//                    yearRange = yearRange,
+//                    selectableDates = selectableDates,
+//                    colors = colors
+//                )
+//            }
         }
     }
 }
