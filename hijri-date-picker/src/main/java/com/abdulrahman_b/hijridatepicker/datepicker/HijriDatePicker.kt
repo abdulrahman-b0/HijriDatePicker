@@ -148,6 +148,110 @@ fun HijriDatePicker(
 }
 
 /**
+ * [HijriMultiDatePicker] is a composable function that provides a date picker component
+ * for selecting **multiple** dates in the Hijri calendar.
+ *
+ * This variant builds on the same visual structure as [HijriDatePicker], but instead of
+ * storing a single [HijrahDate], it interacts with [HijriMultiDatePickerState] and allows
+ * users to toggle an arbitrary set of dates on or off.
+ *
+ * Unlike the single-date picker, this implementation focuses on the calendar (picker) mode.
+ * It does not expose a date input text field by default, as multi-date input via text is
+ * less common and more complex to present in a simple interface.
+ *
+ * @param state The multi-date picker state that holds the set of selected dates, the
+ *   displayed month, and the display mode. See [HijriMultiDatePickerState].
+ * @param modifier The [Modifier] to be applied to this date picker.
+ * @param dateFormatter A [HijriDatePickerFormatter] used for formatting dates in headers,
+ *   content descriptions, and accessibility labels. Defaults to
+ *   [HijriDatePickerDefaults.dateFormatter].
+ * @param firstDayOfWeek The first day of the week to display in the calendar grid.
+ *   Defaults to [DayOfWeek.SATURDAY].
+ * @param dayOfWeekStyle The text style used for day-of-week labels. Defaults to
+ *   [java.time.format.TextStyle.SHORT].
+ * @param title A composable used as the title of the picker. By default, it uses
+ *   [HijriDatePickerDefaults.DatePickerTitle] with the state's [displayMode].
+ * @param headline A composable used as the headline section under the title. By default,
+ *   it uses [HijriDatePickerDefaults.DatePickerHeadline] and shows the first selected date,
+ *   if any.
+ * @param showModeToggle Whether to show a mode toggle that switches between picker and
+ *   input modes. For multi-select scenarios this is typically `false`, but it can be
+ *   enabled for parity if a custom input mode is added later.
+ * @param colors [DatePickerColors] used to resolve the colors in the picker surface,
+ *   headers and calendar grid.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HijriMultiDatePicker(
+    state: HijriMultiDatePickerState,
+    modifier: Modifier = Modifier,
+    dateFormatter: HijriDatePickerFormatter = remember { HijriDatePickerDefaults.dateFormatter() },
+    firstDayOfWeek: DayOfWeek = DayOfWeek.SATURDAY,
+    dayOfWeekStyle: java.time.format.TextStyle = java.time.format.TextStyle.SHORT,
+    title: (@Composable () -> Unit)? = {
+        HijriDatePickerDefaults.DatePickerTitle(
+            displayMode = state.displayMode,
+            modifier = Modifier.padding(DatePickerTitlePadding)
+        )
+    },
+    headline: (@Composable () -> Unit)? = {
+        HijriDatePickerDefaults.DatePickerHeadline(
+            selectedDate = state.selectedDates.firstOrNull(),
+            displayMode = state.displayMode,
+            modifier = Modifier.padding(DatePickerHeadlinePadding)
+        )
+    },
+    showModeToggle: Boolean = false,
+    locale: Locale = LocalConfiguration.current.locales[0],
+    decimalStyle: DecimalStyle = DecimalStyle.of(locale),
+    colors: DatePickerColors = DatePickerDefaults.colors(),
+) {
+    val selectableDates = state.selectableDates
+
+    CompositionLocalProvider(
+        LocalPickerLocale provides locale,
+        LocalPickerDecimalStyle provides decimalStyle,
+        LocalPickerFormatter provides dateFormatter,
+        LocalFirstDayOfWeek provides firstDayOfWeek,
+        LocalDayOfWeekTextStyle provides dayOfWeekStyle
+    ) {
+        DateEntryContainer(
+            modifier = modifier,
+            title = title,
+            headline = headline,
+            modeToggleButton =
+                if (showModeToggle) {
+                    {
+                        DisplayModeToggleButton(
+                            modifier = Modifier.padding(DatePickerModeTogglePadding),
+                            displayMode = state.displayMode,
+                            onDisplayModeChange = { displayMode ->
+                                state.displayMode = displayMode
+                            },
+                        )
+                    }
+                } else {
+                    null
+                },
+            headlineTextStyle = DatePickerModalTokens.HeaderHeadlineFont,
+            headerMinHeight = DatePickerModalTokens.HeaderContainerHeight,
+            colors = colors,
+        ) {
+            MultiDatePickerContent(
+                selectedDates = state.selectedDates,
+                displayedMonth = state.displayedMonth,
+                displayMode = state.displayMode,
+                onDateToggle = { date -> state.toggleDate(date) },
+                onDisplayedMonthChange = { month -> state.displayedMonth = month },
+                yearRange = state.yearRange,
+                selectableDates = selectableDates,
+                colors = colors
+            )
+        }
+    }
+}
+
+/**
  * A base container for the date picker and the date input. This container composes the top common
  * area of the UI, and accepts [content] for the actual calendar picker or text field input.
  */
@@ -271,6 +375,153 @@ private fun SwitchableDateEntryContent(
                     colors = colors,
                     pattern = dateFormatter.inputDateSkeleton,
                     patternDelimiter = dateFormatter.inputDateDelimiter
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Date entry content for the multi-date picker variant.
+ *
+ * This composable focuses on the calendar (picker) mode and leverages
+ * [HorizontalMonthsPagerMulti] to render months and handle multi-date selection.
+ * If [displayMode] is [DisplayMode.Input], it currently falls back to the same
+ * calendar view, but this can be extended to support a dedicated text input mode
+ * if needed in the future.
+ *
+ * @param selectedDates The set of Hijri dates that are currently selected.
+ * @param displayedMonth The month that should be visible initially in the pager.
+ * @param displayMode The current display mode, typically [DisplayMode.Picker].
+ * @param onDateToggle Callback invoked when a day cell is tapped in the calendar grid.
+ * @param onDisplayedMonthChange Callback used to notify the host when the currently
+ *   visible month changes.
+ * @param yearRange The allowed Hijri year range that the user can navigate.
+ * @param selectableDates Constraints determining which dates are enabled for selection.
+ * @param colors Color tokens used to style the picker content.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MultiDatePickerContent(
+    selectedDates: Set<HijrahDate>,
+    displayedMonth: HijrahDate,
+    displayMode: DisplayMode,
+    onDateToggle: (date: HijrahDate) -> Unit,
+    onDisplayedMonthChange: (month: HijrahDate) -> Unit,
+    yearRange: IntRange,
+    selectableDates: HijriSelectableDates,
+    colors: DatePickerColors
+) {
+    val dateFormatter = LocalPickerFormatter.current
+
+    // For consistency with the single-date picker, we still animate between modes
+    // even though multi-select currently only uses the calendar view.
+    DatePickerAnimatedContent(displayMode) { mode ->
+        when (mode) {
+            DisplayMode.Picker -> {
+                val monthPager = rememberPagerState(
+                    initialPage = calculatePageFromDate(displayedMonth, yearRange),
+                ) {
+                    calculateTotalPages(yearRange)
+                }
+                val coroutineScope = rememberCoroutineScope()
+                var yearPickerVisible by rememberSaveable { mutableStateOf(false) }
+
+                Column {
+                    MonthsNavigation(
+                        modifier = Modifier.padding(horizontal = DatePickerHorizontalPadding),
+                        nextAvailable = monthPager.canScrollForward,
+                        previousAvailable = monthPager.canScrollBackward,
+                        yearPickerVisible = yearPickerVisible,
+                        yearPickerText =
+                            dateFormatter.formatMonthYear(
+                                date = displayedMonth,
+                                locale = LocalPickerLocale.current,
+                                decimalStyle = LocalPickerDecimalStyle.current
+                            ) ?: "-",
+                        onNextClicked = {
+                            coroutineScope.launch {
+                                monthPager.animateScrollToPage(
+                                    monthPager.currentPage + 1
+                                )
+                            }
+                        },
+                        onPreviousClicked = {
+                            coroutineScope.launch {
+                                monthPager.animateScrollToPage(
+                                    monthPager.currentPage - 1
+                                )
+                            }
+                        },
+                        onYearPickerButtonClicked = { yearPickerVisible = !yearPickerVisible },
+                        colors = colors
+                    )
+
+                    Box {
+                        Column(
+                            modifier = Modifier.padding(horizontal = DatePickerHorizontalPadding)
+                        ) {
+                            WeekDays(colors)
+                            HorizontalMonthsPagerMulti(
+                                pagerState = monthPager,
+                                selectedDates = selectedDates,
+                                onDateToggle = onDateToggle,
+                                onDisplayedMonthChange = onDisplayedMonthChange,
+                                yearRange = yearRange,
+                                selectableDates = selectableDates,
+                                colors = colors
+                            )
+                        }
+                        // Reuse the same animated year picker overlay as the single-date picker.
+                        this@Column.AnimatedVisibility(
+                            visible = yearPickerVisible,
+                            modifier = Modifier.clipToBounds(),
+                            enter = expandVertically() + fadeIn(initialAlpha = 0.6f),
+                            exit = shrinkVertically() + fadeOut()
+                        ) {
+                            val yearsPaneTitle =
+                                stringResource(R.string.date_picker_year_picker_pane_title)
+                            Column(
+                                modifier = Modifier.semantics { paneTitle = yearsPaneTitle }
+                            ) {
+                                YearPicker(
+                                    modifier =
+                                        Modifier
+                                            .requiredHeightIn(max = MonthYearHeight * 3)
+                                            .padding(horizontal = DatePickerHorizontalPadding),
+                                    currentYear = displayedMonth.year,
+                                    displayedYear = displayedMonth.year,
+                                    onYearSelected = { year ->
+                                        coroutineScope.launch {
+                                            val newMonth = displayedMonth.withYear(year)
+                                            val newPage = calculatePageFromDate(newMonth, yearRange)
+                                            monthPager.scrollToPage(newPage)
+                                            onDisplayedMonthChange(newMonth)
+                                        }
+                                    },
+                                    selectableDates = selectableDates,
+                                    yearRange = yearRange,
+                                    colors = colors
+                                )
+                                HorizontalDivider(color = colors.dividerColor)
+                            }
+                        }
+                    }
+                }
+            }
+
+            // For now, the Input mode falls back to the same calendar content. This branch
+            // can be customized to provide a dedicated multi-date text input if required.
+            DisplayMode.Input -> {
+                MultiDatePickerContent(
+                    selectedDates = selectedDates,
+                    displayedMonth = displayedMonth,
+                    displayMode = DisplayMode.Picker,
+                    onDateToggle = onDateToggle,
+                    onDisplayedMonthChange = onDisplayedMonthChange,
+                    yearRange = yearRange,
+                    selectableDates = selectableDates,
+                    colors = colors
                 )
             }
         }

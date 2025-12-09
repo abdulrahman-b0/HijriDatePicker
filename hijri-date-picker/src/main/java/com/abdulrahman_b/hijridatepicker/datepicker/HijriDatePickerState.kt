@@ -23,6 +23,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates
+import com.abdulrahman_b.hijrahdatetime.extensions.HijrahDates.year
 import com.abdulrahman_b.hijridatepicker.HijriSelectableDates
 import com.abdulrahman_b.hijridatepicker.valueOf
 import java.time.chrono.HijrahDate
@@ -107,6 +108,207 @@ internal class HijriDatePickerStateImpl(
 
     }
 
+}
+
+/**
+ * State holder for a Hijri **multi-date** picker.
+ *
+ * This state stores:
+ * - The set of currently selected Hijri dates [selectedDates].
+ * - The month that is currently visible in the calendar [displayedMonth].
+ * - The active display mode [displayMode] (for consistency with the single-date picker).
+ * - The allowed Hijri year range [yearRange].
+ * - Constraints that determine which dates may be selected [selectableDates].
+ *
+ * Unlike [HijriDatePickerState], which only tracks a *single* selected date,
+ * [HijriMultiDatePickerState] allows users to select an arbitrary set of dates within
+ * the configured year range. Each date tap toggles that date in or out of [selectedDates].
+ *
+ * This class is intended to be created and remembered via
+ * [rememberHijriMultiDatePickerState], so that its state survives configuration
+ * changes and process death when used with [rememberSaveable].
+ *
+ * Typical usage:
+ *
+ * @sample
+ * val multiState = rememberHijriMultiDatePickerState()
+ * HijriMultiDatePicker(state = multiState)
+ *
+ * @param initialSelectedDates The dates initially marked as selected in the calendar.
+ * @param selectableDates Constraints used to determine which dates are enabled for selection.
+ * @param initialDisplayedMonth The Hijri month initially displayed when the picker is shown.
+ * @param initialDisplayMode The initial display mode of the picker UI.
+ * @param yearRange The allowed Hijri year range that users can navigate through.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Stable
+class HijriMultiDatePickerState internal constructor(
+    initialSelectedDates: Set<HijrahDate>,
+    val selectableDates: HijriSelectableDates,
+    initialDisplayedMonth: HijrahDate,
+    initialDisplayMode: DisplayMode,
+    val yearRange: IntRange,
+) {
+
+    /**
+     * The current set of selected Hijri dates.
+     *
+     * This property is observable by Compose. Any time [selectedDates] is updated,
+     * the picker UI will automatically recompose to reflect the new selection.
+     */
+    var selectedDates by mutableStateOf(initialSelectedDates)
+        internal set
+
+    /**
+     * The month currently displayed in the calendar grid, represented as a [HijrahDate].
+     *
+     * The day component of this date is ignored; it is treated as the "month anchor"
+     * the UI uses to show the grid. This value is kept in sync with the underlying
+     * pager via [onDisplayedMonthChange] callbacks.
+     */
+    var displayedMonth by mutableStateOf(initialDisplayedMonth)
+        internal set
+
+    /**
+     * The current display mode of the picker.
+     *
+     * For multi-select scenarios this will typically remain [DisplayMode.Picker],
+     * but it is kept for parity with [HijriDatePickerState] and possible future
+     * input modes.
+     */
+    var displayMode by mutableStateOf(initialDisplayMode)
+        internal set
+
+    /**
+     * Returns `true` if the given [date] is currently selected.
+     */
+    fun isSelected(date: HijrahDate): Boolean =
+        selectedDates.contains(date)
+
+    /**
+     * Toggles the selection state of the given [date].
+     *
+     * - If the [date] is currently in [selectedDates], it will be removed.
+     * - If it is not present and satisfies [selectableDates], it will be added.
+     *
+     * Dates that are not selectable according to [selectableDates] are ignored.
+     */
+    fun toggleDate(date: HijrahDate) {
+        val canSelect = with(selectableDates) {
+            isSelectableYear(date.year) && isSelectableDate(date)
+        }
+        if (!canSelect) return
+
+        val current = selectedDates.toMutableSet()
+        if (current.contains(date)) {
+            current.remove(date)
+        } else {
+            current.add(date)
+        }
+        selectedDates = current.toSet()
+    }
+
+    /**
+     * Clears all selected dates, resulting in an empty [selectedDates] set.
+     */
+    fun clearSelection() {
+        selectedDates = emptySet()
+    }
+
+    internal companion object {
+
+        /**
+         * A [Saver] implementation that allows [HijriMultiDatePickerState] to participate
+         * in `rememberSaveable`, so that it can be restored across configuration changes
+         * and process recreation.
+         *
+         * The saver serializes:
+         * - The selected dates as a list of epoch days.
+         * - The displayed month as an epoch day.
+         * - The display mode as a [String].
+         * - The year range bounds.
+         */
+        fun Saver(
+            selectableDates: HijriSelectableDates
+        ): Saver<HijriMultiDatePickerState, *> = listSaver(
+            save = { state ->
+                listOf(
+                    state.selectedDates.map { it.toEpochDay() },
+                    state.displayedMonth.toEpochDay(),
+                    state.displayMode.toString(),
+                    state.yearRange.first,
+                    state.yearRange.last,
+                )
+            },
+            restore = { value ->
+                val selectedEpochDays = value[0] as List<Long>
+                val displayedMonthEpochDay = value[1] as Long
+                val displayModeString = value[2] as String
+                val startYear = value[3] as Int
+                val endYear = value[4] as Int
+
+                val restoredSelectedDates = selectedEpochDays
+                    .map(HijrahDates::ofEpochDay)
+                    .toSet()
+
+                HijriMultiDatePickerState(
+                    initialSelectedDates = restoredSelectedDates,
+                    initialDisplayedMonth = HijrahDates.ofEpochDay(displayedMonthEpochDay),
+                    initialDisplayMode = DisplayMode.valueOf(displayModeString),
+                    yearRange = IntRange(startYear, endYear),
+                    selectableDates = selectableDates,
+                )
+            }
+        )
+    }
+}
+
+/**
+ * Creates and remembers a [HijriMultiDatePickerState] across recompositions.
+ *
+ * This overload is similar to [rememberHijriDatePickerState], but is designed for
+ * multi-date selection scenarios where users can select an arbitrary set of dates
+ * within the allowed [yearRange].
+ *
+ * The returned state is automatically saved and restored using [rememberSaveable]
+ * and [HijriMultiDatePickerState.Saver], so it will survive configuration changes
+ * and process recreation when used in a standard Compose setup.
+ *
+ * @param initialSelectedDates The initial set of dates that should appear selected.
+ *   Defaults to an empty set, meaning no dates are selected initially.
+ * @param initialDisplayedMonth The Hijri month to display first when the picker
+ *   is shown. Defaults to [HijrahDate.now].
+ * @param initialDisplayMode The initial display mode of the picker UI, either
+ *   [DisplayMode.Picker] or [DisplayMode.Input]. For multi-select scenarios,
+ *   [DisplayMode.Picker] is typically used.
+ * @param yearRange The inclusive Hijri year range users are allowed to navigate.
+ *   Defaults to [HijriDatePickerDefaults.YearRange].
+ * @param selectableDates The constraints that determine which dates are enabled
+ *   for interaction. Defaults to [HijriDatePickerDefaults.AllDates], which allows
+ *   all dates within [yearRange].
+ *
+ * @return A remembered [HijriMultiDatePickerState] instance.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun rememberHijriMultiDatePickerState(
+    initialSelectedDates: Set<HijrahDate> = emptySet(),
+    initialDisplayedMonth: HijrahDate = HijrahDate.now(),
+    initialDisplayMode: DisplayMode = DisplayMode.Picker,
+    yearRange: IntRange = HijriDatePickerDefaults.YearRange,
+    selectableDates: HijriSelectableDates = HijriDatePickerDefaults.AllDates,
+): HijriMultiDatePickerState {
+    return rememberSaveable(
+        saver = HijriMultiDatePickerState.Saver(selectableDates)
+    ) {
+        HijriMultiDatePickerState(
+            initialSelectedDates = initialSelectedDates,
+            initialDisplayedMonth = initialDisplayedMonth,
+            initialDisplayMode = initialDisplayMode,
+            yearRange = yearRange,
+            selectableDates = selectableDates,
+        )
+    }
 }
 
 /**
