@@ -11,6 +11,8 @@
     <string name="date_input_no_input_description">None</string>
     <string name="date_input_title">Select date</string>
     <string name="date_picker_headline">"Selected date"</string>
+    <string name="multi_date_picker_headline">"Selected dates"</string>
+    <string name="__date_selected">"%s Selected dates"</string>
     <string name="date_picker_headline_description">Current selection: %1$s</string>
     <string name="date_picker_navigate_to_year_description">Navigate to year %1$s</string>
     <string name="date_picker_no_selection_description">None</string>

@@ -9,6 +9,8 @@
     <string msgid="1237013946323089826" name="date_input_no_input_description">"بدون تاريخ"</string>
     <string msgid="7306227249789210568" name="date_input_title">"اختيار تاريخ"</string>
     <string msgid="7605002211875882969" name="date_picker_headline">"التاريخ المحدَّد"</string>
+    <string name="multi_date_picker_headline">التواريخ المحددة</string>
+    <string name="__date_selected">"%s تواريخ محددة"</string>
     <string msgid="3664277305226978227" name="date_picker_headline_description">"‏الاختيار الحالي: %1$s"</string>
     <string msgid="8436650776581492840" name="date_picker_navigate_to_year_description">"‏الانتقال إلى سنة %1$s"</string>
     <string msgid="5811000998184572395" name="date_picker_no_selection_description">"بدون تاريخ"</string>
