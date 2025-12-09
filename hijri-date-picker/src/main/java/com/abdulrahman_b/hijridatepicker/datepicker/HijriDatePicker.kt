@@ -180,6 +180,7 @@ fun HijriDatePicker(
  * @param colors [DatePickerColors] used to resolve the colors in the picker surface,
  *   headers and calendar grid.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HijriMultiDatePicker(
     state: HijriMultiDatePickerState,
@@ -201,11 +202,11 @@ fun HijriMultiDatePicker(
         )
     },
     showModeToggle: Boolean = false,
-    colors: DatePickerColors = HijriDatePickerDefaults.colors(),
+    locale: Locale = LocalConfiguration.current.locales[0],
+    decimalStyle: DecimalStyle = DecimalStyle.of(locale),
+    colors: DatePickerColors = DatePickerDefaults.colors(),
 ) {
     val selectableDates = state.selectableDates
-    val locale = LocalConfiguration.current.locales[0]
-    val decimalStyle: DecimalStyle = dateFormatter.dateDecimalStyle
 
     CompositionLocalProvider(
         LocalPickerLocale provides locale,
@@ -236,11 +237,10 @@ fun HijriMultiDatePicker(
             headerMinHeight = DatePickerModalTokens.HeaderContainerHeight,
             colors = colors,
         ) {
-            // For multi-select we primarily support the picker mode. If the state is
-            // switched to Input, the calendar will still be shown by default.
             MultiDatePickerContent(
                 selectedDates = state.selectedDates,
                 displayedMonth = state.displayedMonth,
+                displayMode = state.displayMode,
                 onDateToggle = { date -> state.toggleDate(date) },
                 onDisplayedMonthChange = { month -> state.displayedMonth = month },
                 yearRange = state.yearRange,
@@ -473,7 +473,7 @@ private fun MultiDatePickerContent(
                             )
                         }
                         // Reuse the same animated year picker overlay as the single-date picker.
-                        Column.AnimatedVisibility(
+                        this@Column.AnimatedVisibility(
                             visible = yearPickerVisible,
                             modifier = Modifier.clipToBounds(),
                             enter = expandVertically() + fadeIn(initialAlpha = 0.6f),
@@ -490,7 +490,7 @@ private fun MultiDatePickerContent(
                                             .requiredHeightIn(max = MonthYearHeight * 3)
                                             .padding(horizontal = DatePickerHorizontalPadding),
                                     currentYear = displayedMonth.year,
-                                    yearRange = yearRange,
+                                    displayedYear = displayedMonth.year,
                                     onYearSelected = { year ->
                                         coroutineScope.launch {
                                             val newMonth = displayedMonth.withYear(year)
@@ -499,6 +499,8 @@ private fun MultiDatePickerContent(
                                             onDisplayedMonthChange(newMonth)
                                         }
                                     },
+                                    selectableDates = selectableDates,
+                                    yearRange = yearRange,
                                     colors = colors
                                 )
                                 HorizontalDivider(color = colors.dividerColor)

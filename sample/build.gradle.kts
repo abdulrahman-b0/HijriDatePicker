@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.abdulrahman_b.hijridatepicker.sample"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.abdulrahman_b.hijridatepicker"
