@@ -1,5 +1,4 @@
 import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.*
 
@@ -130,7 +129,6 @@ mavenPublishing {
             publishJavadocJar = true,
         )
     )
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
     pom { configurePom(this) }
 
     signAllPublications()
