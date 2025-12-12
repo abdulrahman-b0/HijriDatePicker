@@ -99,20 +99,9 @@ internal fun YearPicker(
             )
         // Match the years container color to any elevated surface color that is composed under it.
         val containerColor = colors.containerColor
-        val coroutineScope = rememberCoroutineScope()
-        val scrollToEarlierYearsLabel = stringResource(R.string.date_picker_scroll_to_earlier_years)
-        val scrollToLaterYearsLabel = stringResource(R.string.date_picker_scroll_to_later_years)
         LazyVerticalGrid(
             columns = GridCells.Fixed(YearsInRow),
-            modifier =
-                modifier
-                    .background(containerColor)
-                    // Apply this to have the screen reader traverse outside the visible list of
-                    // years
-                    // and not scroll them by default.
-                    .semantics {
-                        verticalScrollAxisRange = ScrollAxisRange(value = { 0f }, maxValue = { 0f })
-                    },
+            modifier = modifier.background(containerColor),
             state = lazyGridState,
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalArrangement = Arrangement.spacedBy(YearsVerticalPadding)
@@ -125,30 +114,7 @@ internal fun YearPicker(
                         Modifier.requiredSize(
                             width = DatePickerModalTokens.SelectionYearContainerWidth,
                             height = DatePickerModalTokens.SelectionYearContainerHeight
-                        )
-                            .semantics {
-                                // Apply a11y custom actions to the first and last items in the
-                                // years
-                                // grid. The actions will suggest to scroll to earlier or later
-                                // years in
-                                // the grid.
-                                customActions =
-                                    if (
-                                        lazyGridState.firstVisibleItemIndex == it ||
-                                        lazyGridState.layoutInfo.visibleItemsInfo
-                                            .lastOrNull()
-                                            ?.index == it
-                                    ) {
-                                        customScrollActions(
-                                            state = lazyGridState,
-                                            coroutineScope = coroutineScope,
-                                            scrollUpLabel = scrollToEarlierYearsLabel,
-                                            scrollDownLabel = scrollToLaterYearsLabel
-                                        )
-                                    } else {
-                                        emptyList()
-                                    }
-                            },
+                        ),
                     selected = yearEntry == displayedYear,
                     currentYear = yearEntry == currentYear,
                     onClick = { onYearSelected(yearEntry) },
@@ -219,34 +185,6 @@ private fun Year(
 }
 
 
-
-private fun customScrollActions(
-    state: LazyGridState,
-    coroutineScope: CoroutineScope,
-    scrollUpLabel: String,
-    scrollDownLabel: String
-): List<CustomAccessibilityAction> {
-    val scrollUpAction = {
-        if (!state.canScrollBackward) {
-            false
-        } else {
-            coroutineScope.launch { state.scrollToItem(state.firstVisibleItemIndex - YearsInRow) }
-            true
-        }
-    }
-    val scrollDownAction = {
-        if (!state.canScrollForward) {
-            false
-        } else {
-            coroutineScope.launch { state.scrollToItem(state.firstVisibleItemIndex + YearsInRow) }
-            true
-        }
-    }
-    return listOf(
-        CustomAccessibilityAction(label = scrollUpLabel, action = scrollUpAction),
-        CustomAccessibilityAction(label = scrollDownLabel, action = scrollDownAction)
-    )
-}
 
 private const val YearsInRow: Int = 3
 
