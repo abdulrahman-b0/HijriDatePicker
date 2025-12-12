@@ -238,7 +238,7 @@ Step 2: Add the library dependency:
 
 ```kotlin
 dependencies {
-    implementation("com.abdulrahman-b.hijridatepicker:hijridatepicker:1.1.0")
+    implementation("com.abdulrahman-b.hijridatepicker:hijridatepicker:1.1.1")
 }
 ```
 
@@ -246,7 +246,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation "com.abdulrahman-b.hijridatepicker:hijridatepicker:1.1.0"
+    implementation "com.abdulrahman-b.hijridatepicker:hijridatepicker:1.1.1"
 }
 ```
 
