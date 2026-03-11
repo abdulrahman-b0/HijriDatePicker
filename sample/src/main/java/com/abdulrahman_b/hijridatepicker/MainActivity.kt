@@ -24,7 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
 import com.abdulrahman_b.hijridatepicker.datepicker.HijriDatePicker
 import com.abdulrahman_b.hijridatepicker.datepicker.HijriMultiDatePicker
@@ -84,7 +84,7 @@ fun DatePickerFormSample(
             value = selectedDate,
             onValueChange = { },
             readOnly = true,
-            label = { Text(stringResource(R.string.select_date)) },
+            label = { Text(stringResource(Res.string.select_date)) },
             modifier = Modifier.padding(horizontal = 16.dp),
             trailingIcon = {
                 IconButton(
@@ -92,7 +92,7 @@ fun DatePickerFormSample(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_event),
-                        contentDescription = stringResource(R.string.select_date)
+                        contentDescription = stringResource(Res.string.select_date)
                     )
                 }
             }
@@ -107,7 +107,7 @@ fun DatePickerFormSample(
                             selectedDate = datePickerState.selectedDate?.format(formatter) ?: ""
                             selectDateDialogOpen = false
                         },
-                        content = { Text(stringResource(R.string.ok)) }
+                        content = { Text(stringResource(Res.string.ok)) }
                     )
                 },
             ) {
@@ -129,7 +129,7 @@ fun DatePickerFormSample(
             value = selectedDateRange,
             onValueChange = { },
             readOnly = true,
-            label = { Text(stringResource(R.string.select_date_range)) },
+            label = { Text(stringResource(Res.string.select_date_range)) },
             modifier = Modifier.padding(horizontal = 16.dp),
             trailingIcon = {
                 IconButton(
@@ -137,7 +137,7 @@ fun DatePickerFormSample(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_date_range),
-                        contentDescription = stringResource(R.string.select_date_range)
+                        contentDescription = stringResource(Res.string.select_date_range)
                     )
                 }
             }
@@ -156,7 +156,7 @@ fun DatePickerFormSample(
                                 "$startDate - $endDate".takeIf { startDate.isNotEmpty() && endDate.isNotEmpty() } ?: ""
                             selectDateRangeDialogOpen = false
                         },
-                        content = { Text(stringResource(R.string.ok)) }
+                        content = { Text(stringResource(Res.string.ok)) }
                     )
                 },
             ) {
@@ -245,7 +245,7 @@ fun HijriMultiDatePickerSection(
                             selectedDatesText = formatted
                             selectMultiDateDialogOpen = false
                         },
-                        content = { Text(stringResource(R.string.ok)) }
+                        content = { Text(stringResource(Res.string.ok)) }
                     )
                 },
             ) {

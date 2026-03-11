@@ -1,77 +1,61 @@
-import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+import com.vanniktech.maven.publish.KotlinMultiplatform
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.*
 
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.android.kotlinMultiplatform.library)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.vanniktechMavenPublish)
 }
 
-android {
-    namespace = "com.abdulrahman_b.hijridatepicker"
-    compileSdk = 36
+kotlin {
 
-    defaultConfig {
-        minSdk = 26
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-
-
-        aarMetadata {
-            minCompileSdk = 26
+    android {
+        namespace = "com.abdulrahman_b.hijridatepicker"
+        compileSdk = 36
+        androidResources.enable = true
+        withDeviceTest {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
-
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlin {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
+    jvm()
+    iosArm64()
+    iosSimulatorArm64()
+    macosArm64()
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.composeMultiplatform.runtime)
+            implementation(libs.composeMultiplatform.foundation)
+            implementation(libs.composeMultiplatform.material3)
+            implementation(libs.composeMultiplatform.ui)
+            implementation(libs.composeMultiplatform.ui.graphics)
+            implementation(libs.composeMultiplatform.ui.tooling.preview)
+            api(libs.composeMultiplatform.components.resources)
+            implementation(libs.composeMultiplatform.material.iconsCore)
+
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.hijrahdatetime)
+
         }
     }
 
-    buildFeatures {
-        compose = true
+}
+
+compose {
+    resources {
+        packageOfResClass = "com.abdulrahman_b.hijridatepicker.resources"
     }
 }
 
 dependencies {
-
-    implementation(libs.hijrahdatetime)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.ui.coreIcons)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    testImplementation(kotlin("test-junit5"))
-    testImplementation(libs.junit.jupiter.api)
-    testImplementation(libs.junit.jupiter.params)
-    testImplementation(libs.mockk)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation(libs.androidx.espresso.core)
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
+    androidRuntimeClasspath(libs.composeMultiplatform.ui.tooling.asProvider())
 }
 
 /**
@@ -122,13 +106,7 @@ mavenPublishing {
         version = rootProject.version.toString()
     )
 
-    configure(
-        AndroidSingleVariantLibrary(
-            variant = "release",
-            sourcesJar = true,
-            publishJavadocJar = true,
-        )
-    )
+    configure(KotlinMultiplatform(sourcesJar = true))
     pom { configurePom(this) }
 
     signAllPublications()

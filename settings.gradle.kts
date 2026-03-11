@@ -22,5 +22,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "HijriDatePicker"
-include(":sample")
+//include(":sample")
 include(":hijri-date-picker")

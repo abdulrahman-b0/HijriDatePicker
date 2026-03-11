@@ -94,7 +94,7 @@ fun DatePickerExample() {
                         }
                         selectDateDialogOpen = false
                     },
-                    content = { Text(stringResource(R.string.ok)) }
+                    content = { Text(stringResource(Res.string.ok)) }
                 )
             },
         ) {
@@ -143,7 +143,7 @@ fun DateRangePickerExample() {
                         }
                         selectDateDialogOpen = false
                     },
-                    content = { Text(stringResource(R.string.ok)) }
+                    content = { Text(stringResource(Res.string.ok)) }
                 )
             },
         ) {
@@ -190,7 +190,7 @@ fun MultiDatePickerExample() {
 
                         selectMultiDatesDialogOpen = false
                     },
-                    content = { Text(stringResource(R.string.ok)) }
+                    content = { Text(stringResource(Res.string.ok)) }
                 )
             }
         ) {
@@ -206,7 +206,7 @@ fun MultiDatePickerExample() {
      * on a button click or any other event, for example:
      *
      * Button(onClick = { selectMultiDatesDialogOpen = true }) {
-     *     Text(stringResource(R.string.select_dates))
+     *     Text(stringResource(Res.string.select_dates))
      * }
      */
 }
