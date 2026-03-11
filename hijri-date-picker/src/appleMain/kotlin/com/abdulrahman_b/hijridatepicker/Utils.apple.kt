@@ -1,5 +1,6 @@
 package com.abdulrahman_b.hijridatepicker
 
+import androidx.compose.material3.CalendarLocale
 import com.abdulrahman_b.hijrahdatetime.DecimalStyle
 import com.abdulrahman_b.hijrahdatetime.FormatLocale
 import platform.Foundation.NSNumber
@@ -16,3 +17,5 @@ actual fun Int.toLocalString(
 
     return formatter.stringFromNumber(NSNumber(this)) ?: toString()
 }
+
+actual fun FormatLocale.toMaterial3CalendarLocale(): CalendarLocale = nsLocale

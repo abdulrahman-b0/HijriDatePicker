@@ -204,6 +204,9 @@ internal fun Int.toLocalString(): String {
 }
 
 expect fun Int.toLocalString(locale: FormatLocale, decimalStyle: DecimalStyle): String
+
+expect fun FormatLocale.toMaterial3CalendarLocale(): CalendarLocale
+
 internal fun DisplayMode.Companion.valueOf(value: String): DisplayMode {
     return when (value) {
         "Picker" -> Picker
