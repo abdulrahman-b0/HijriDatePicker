@@ -41,7 +41,7 @@ kotlin {
             implementation(libs.composeMultiplatform.material.iconsCore)
 
             implementation(libs.kotlinx.datetime)
-            implementation(libs.hijrahdatetime)
+            api(libs.hijrahdatetime)
 
         }
     }
@@ -110,6 +110,23 @@ mavenPublishing {
     pom { configurePom(this) }
 
     signAllPublications()
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "Reposilite"
+            if (rootProject.version.toString().endsWith("SNAPSHOT"))
+                url = uri("https://maven.abdulrahman-b.com/snapshots")
+            else
+                url = uri("https://maven.abdulrahman-b.com/releases")
+
+            credentials {
+                username = globalGradleProperties.getProperty("reposilite.username")
+                password = globalGradleProperties.getProperty("reposilite.password")
+            }
+        }
+    }
 }
 
 private fun configurePom(target: MavenPom) = with(target) {
