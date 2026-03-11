@@ -49,17 +49,16 @@ object HijriDatePickerDefaults {
      * A date format skeleton used to format the date picker's year selection menu button (e.g.
      * "Ramadan 1446")
      */
-    const val YEAR_MONTH_SKELETON: String = "yMMMM"
+    const val YEAR_MONTH_SKELETON: String = "y MMMM"
 
     /** A date format skeleton used to format a selected date (e.g. "Saf 27, 1446") */
-    const val YEAR_ABBR_MONTH_DAY_SKELETON: String = "yMMMMd"
+    const val YEAR_ABBR_MONTH_DAY_SKELETON: String = "y MMMM d"
 
     /**
      * A date format skeleton used to format a selected date to be used as content description for
      * screen readers (e.g. "Saturday, Shawwal 27, 1446")
      */
-    @Suppress("SpellCheckingInspection")
-    const val YEAR_MONTH_WEEKDAY_DAY_SKELETON: String = "yMMMEEEd"
+    const val YEAR_MONTH_WEEKDAY_DAY_SKELETON: String = "y MMM, EEE d"
 
     private const val INPUT_DATE_SKELETON: String = "yyyy/MM/dd"
     private const val INPUT_DATE_DELIMITER: Char = '/'
