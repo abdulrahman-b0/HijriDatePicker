@@ -11,11 +11,11 @@ actual fun Int.toLocalString(
     decimalStyle: DecimalStyle
 ): String {
     val formatter = NSNumberFormatter()
-    formatter.locale = locale.nsLocale
+    formatter.locale = locale
     formatter.maximumFractionDigits = 0u
     formatter.minimumFractionDigits = 0u
 
     return formatter.stringFromNumber(NSNumber(this)) ?: toString()
 }
 
-actual fun FormatLocale.toMaterial3CalendarLocale(): CalendarLocale = nsLocale
+actual fun FormatLocale.toMaterial3CalendarLocale(): CalendarLocale = this

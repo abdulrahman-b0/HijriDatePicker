@@ -96,7 +96,7 @@ fun HijriDatePicker(
         )
     },
     showModeToggle: Boolean = true,
-    locale: FormatLocale = FormatLocale.getDefault(),
+    locale: FormatLocale = FormatLocales.getDefault(),
     decimalStyle: DecimalStyle = remember(locale) {
         DecimalStyle.OfLocale(locale)
     },
@@ -200,7 +200,7 @@ fun HijriMultiDatePicker(
             modifier = Modifier.padding(DatePickerHeadlinePadding)
         )
     },
-    locale: FormatLocale = FormatLocale.getDefault(),
+    locale: FormatLocale = FormatLocales.getDefault(),
     decimalStyle: DecimalStyle = remember(locale) {
         DecimalStyle.OfLocale(locale)
     },

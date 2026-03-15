@@ -94,7 +94,7 @@ fun HijriDateRangePicker(
     },
     firstDayOfWeek: DayOfWeek = DayOfWeek.SATURDAY,
     dayOfWeekTextStyle: NameStyle = NameStyle.ABBREVIATED,
-    locale: FormatLocale = FormatLocale.getDefault(),
+    locale: FormatLocale = FormatLocales.getDefault(),
     decimalStyle: DecimalStyle = DecimalStyle.OfLocale(locale),
     showModeToggle: Boolean = true,
     colors: DatePickerColors = DatePickerDefaults.colors()
