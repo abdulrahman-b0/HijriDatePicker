@@ -1,6 +1,6 @@
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.*
+import java.util.Properties
 
 
 plugins {
@@ -16,7 +16,11 @@ kotlin {
     android {
         namespace = "com.abdulrahman_b.hijridatepicker"
         compileSdk = 36
+        minSdk = 26
         androidResources.enable = true
+        aarMetadata {
+            this.minCompileSdk = 26
+        }
         withDeviceTest {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
@@ -24,12 +28,26 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    jvm()
-    iosArm64()
-    iosSimulatorArm64()
-    macosArm64()
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
+
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64(),
+        macosArm64(),
+    ).forEach { target ->
+        target.binaries.framework {
+            baseName = "HijriDatePicker"
+            isStatic = true
+            binaryOption("bundleId", "com.abdulrahman_b.hijridatepicker.framework")
+        }
+    }
 
     sourceSets {
+        applyDefaultHierarchyTemplate()
         commonMain.dependencies {
             implementation(libs.composeMultiplatform.runtime)
             implementation(libs.composeMultiplatform.foundation)
@@ -44,6 +62,11 @@ kotlin {
             api(libs.hijrahdatetime)
 
         }
+        val jvmCommonMain by creating {
+            dependsOn(commonMain.get())
+        }
+        jvmMain.get().dependsOn(jvmCommonMain)
+        androidMain.get().dependsOn(jvmCommonMain)
     }
 
 }
