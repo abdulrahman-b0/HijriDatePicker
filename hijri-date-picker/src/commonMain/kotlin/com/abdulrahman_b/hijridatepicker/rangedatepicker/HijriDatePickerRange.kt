@@ -21,8 +21,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DatePickerColors
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerFormatter
+import androidx.compose.material3.DisplayMode
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.CornerRadius
@@ -35,14 +45,34 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.abdulrahman_b.hijrahdatetime.*
+import com.abdulrahman_b.hijrahdatetime.DecimalStyle
+import com.abdulrahman_b.hijrahdatetime.FormatLocale
+import com.abdulrahman_b.hijrahdatetime.FormatLocales
+import com.abdulrahman_b.hijrahdatetime.HijrahDate
+import com.abdulrahman_b.hijrahdatetime.format.NameStyle
+import com.abdulrahman_b.hijrahdatetime.toHijrahDateTime
 import com.abdulrahman_b.hijrahdatetime.yearmonth.HijrahYearMonth
-import com.abdulrahman_b.hijridatepicker.*
+import com.abdulrahman_b.hijridatepicker.HijriDatePickerFormatter
+import com.abdulrahman_b.hijridatepicker.HijriSelectableDates
+import com.abdulrahman_b.hijridatepicker.LocalDayOfWeekTextStyle
+import com.abdulrahman_b.hijridatepicker.LocalFirstDayOfWeek
+import com.abdulrahman_b.hijridatepicker.LocalPickerDecimalStyle
+import com.abdulrahman_b.hijridatepicker.LocalPickerFormatter
+import com.abdulrahman_b.hijridatepicker.LocalPickerLocale
+import com.abdulrahman_b.hijridatepicker.calculatePageFromYearMonth
+import com.abdulrahman_b.hijridatepicker.calculateTotalPages
+import com.abdulrahman_b.hijridatepicker.calculateYearMonthFromPage
 import com.abdulrahman_b.hijridatepicker.components.DatePickerAnimatedContent
 import com.abdulrahman_b.hijridatepicker.components.Month
 import com.abdulrahman_b.hijridatepicker.components.WeekDays
 import com.abdulrahman_b.hijridatepicker.components.updateDisplayedMonth
-import com.abdulrahman_b.hijridatepicker.datepicker.*
+import com.abdulrahman_b.hijridatepicker.datepicker.DAYS_IN_WEEK
+import com.abdulrahman_b.hijridatepicker.datepicker.DateEntryContainer
+import com.abdulrahman_b.hijridatepicker.datepicker.DatePickerHorizontalPadding
+import com.abdulrahman_b.hijridatepicker.datepicker.DatePickerModeTogglePadding
+import com.abdulrahman_b.hijridatepicker.datepicker.DisplayModeToggleButton
+import com.abdulrahman_b.hijridatepicker.datepicker.HijriDatePickerDefaults
+import com.abdulrahman_b.hijridatepicker.datepicker.RecommendedSizeForAccessibility
 import com.abdulrahman_b.hijridatepicker.resources.Res
 import com.abdulrahman_b.hijridatepicker.resources.date_range_picker_scroll_to_next_month
 import com.abdulrahman_b.hijridatepicker.resources.date_range_picker_scroll_to_previous_month
@@ -50,6 +80,7 @@ import com.abdulrahman_b.hijridatepicker.tokens.DatePickerModalTokens
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 
@@ -253,7 +284,7 @@ private fun VerticalMonthsList(
     colors: DatePickerColors
 ) {
     val today = remember {
-        Clock.System.now().toHijrahDate()
+        Clock.System.now().toHijrahDateTime(TimeZone.currentSystemDefault()).date
     }
     val dateFormatter = LocalPickerFormatter.current
     val firstDayOfWeek = LocalFirstDayOfWeek.current

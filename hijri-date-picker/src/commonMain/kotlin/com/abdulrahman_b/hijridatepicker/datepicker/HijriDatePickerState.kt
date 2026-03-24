@@ -18,17 +18,23 @@ package com.abdulrahman_b.hijridatepicker.datepicker
 
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import com.abdulrahman_b.hijrahdatetime.HijrahDate
-import com.abdulrahman_b.hijrahdatetime.toHijrahDate
+import com.abdulrahman_b.hijrahdatetime.toHijrahDateTime
 import com.abdulrahman_b.hijrahdatetime.yearMonth
 import com.abdulrahman_b.hijrahdatetime.yearmonth.HijrahYearMonth
 import com.abdulrahman_b.hijridatepicker.HijriSelectableDates
 import com.abdulrahman_b.hijridatepicker.datepicker.HijriMultiDatePickerState.Companion.Saver
 import com.abdulrahman_b.hijridatepicker.valueOf
+import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 
 
@@ -297,7 +303,7 @@ class HijriMultiDatePickerState internal constructor(
 @Composable
 fun rememberHijriMultiDatePickerState(
     initialSelectedDates: Set<HijrahDate> = emptySet(),
-    initialDisplayedMonth: HijrahYearMonth = Clock.System.now().toHijrahDate().yearMonth,
+    initialDisplayedMonth: HijrahYearMonth = Clock.System.now().toHijrahDateTime(TimeZone.currentSystemDefault()).date.yearMonth,
     initialDisplayMode: DisplayMode = DisplayMode.Picker,
     yearRange: IntRange = HijriDatePickerDefaults.YearRange,
     selectableDates: HijriSelectableDates = HijriDatePickerDefaults.AllDates,
@@ -330,7 +336,7 @@ fun rememberHijriMultiDatePickerState(
 fun rememberHijriDatePickerState(
     initialSelectedDate: HijrahDate? = null,
     initialDisplayedMonth: HijrahYearMonth = remember {
-        Clock.System.now().toHijrahDate().yearMonth
+        Clock.System.now().toHijrahDateTime(TimeZone.currentSystemDefault()).date.yearMonth
     },
     initialDisplayMode: DisplayMode = DisplayMode.Picker,
     yearRange: IntRange = HijriDatePickerDefaults.YearRange,

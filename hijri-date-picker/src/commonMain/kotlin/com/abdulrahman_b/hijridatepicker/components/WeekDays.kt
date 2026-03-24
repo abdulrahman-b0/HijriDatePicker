@@ -34,8 +34,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.util.fastForEach
-import com.abdulrahman_b.hijrahdatetime.FormatLocale
-import com.abdulrahman_b.hijrahdatetime.NameStyle
+import com.abdulrahman_b.hijrahdatetime.format.NameStyle
 import com.abdulrahman_b.hijrahdatetime.getDisplayName
 import com.abdulrahman_b.hijridatepicker.LocalDayOfWeekTextStyle
 import com.abdulrahman_b.hijridatepicker.LocalFirstDayOfWeek
