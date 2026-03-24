@@ -50,6 +50,7 @@ android {
 dependencies {
 
     implementation(project(":hijri-date-picker"))
+    implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

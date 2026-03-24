@@ -1,6 +1,6 @@
 [versions]
 agp = "9.1.0"
-hijrahdatetime = "2.0.0-alpha02"
+hijrahdatetime = "2.0.0-alpha03"
 kotlin = "2.3.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"

@@ -4,7 +4,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import com.abdulrahman_b.hijrahdatetime.DecimalStyle
 import com.abdulrahman_b.hijrahdatetime.FormatLocale
 import com.abdulrahman_b.hijrahdatetime.HijrahDate
-import com.abdulrahman_b.hijrahdatetime.HijrahDateTimeFormat
+import com.abdulrahman_b.hijrahdatetime.format.HijrahDateTimeFormat
 import com.abdulrahman_b.hijrahdatetime.yearmonth.HijrahYearMonth
 
 /**
@@ -138,7 +138,10 @@ class HijriDatePickerFormatter(
     ): HijrahDateTimeFormat {
         val key = "$skeleton-$locale-$decimalStyle"
         return formattersCache.getOrPut(key) {
-            HijrahDateTimeFormat.ofPattern(skeleton, locale)
+            if (applyBestPattern) {
+                HijrahDateTimeFormat.ofBestPattern(skeleton, locale)
+            } else
+                HijrahDateTimeFormat.ofPattern(skeleton, locale)
         }
     }
 }

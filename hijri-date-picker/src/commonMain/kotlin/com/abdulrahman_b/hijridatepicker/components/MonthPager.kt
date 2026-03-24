@@ -16,25 +16,46 @@ package com.abdulrahman_b.hijridatepicker.components
 * limitations under the License.
 */
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.DatePickerColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.runtime.*
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import com.abdulrahman_b.hijrahdatetime.HijrahDate
-import com.abdulrahman_b.hijrahdatetime.toHijrahDate
+import com.abdulrahman_b.hijrahdatetime.toHijrahDateTime
 import com.abdulrahman_b.hijrahdatetime.yearmonth.HijrahYearMonth
-import com.abdulrahman_b.hijridatepicker.*
+import com.abdulrahman_b.hijridatepicker.HijriSelectableDates
+import com.abdulrahman_b.hijridatepicker.LocalFirstDayOfWeek
+import com.abdulrahman_b.hijridatepicker.LocalPickerDecimalStyle
+import com.abdulrahman_b.hijridatepicker.LocalPickerFormatter
+import com.abdulrahman_b.hijridatepicker.LocalPickerLocale
+import com.abdulrahman_b.hijridatepicker.calculateDaysFromStartOfWeekToFirstOfMonth
+import com.abdulrahman_b.hijridatepicker.calculateYearMonthFromPage
 import com.abdulrahman_b.hijridatepicker.datepicker.DAYS_IN_WEEK
 import com.abdulrahman_b.hijridatepicker.datepicker.RecommendedSizeForAccessibility
 import com.abdulrahman_b.hijridatepicker.rangedatepicker.SelectedRangeInfo
 import com.abdulrahman_b.hijridatepicker.rangedatepicker.drawRangeBackground
 import com.abdulrahman_b.hijridatepicker.tokens.DatePickerModalTokens
+import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 
 
@@ -51,7 +72,7 @@ internal fun HorizontalMonthsPager(
     colors: DatePickerColors
 ) {
     val today = remember {
-        Clock.System.now().toHijrahDate()
+        Clock.System.now().toHijrahDateTime(TimeZone.currentSystemDefault()).date
     }
 
     ProvideTextStyle(DatePickerModalTokens.DateLabelTextFont) {
@@ -108,8 +129,10 @@ internal fun Month(
     val daysFromStartOfWeekToFirstOfMonth = remember(displayedMonth) {
         calculateDaysFromStartOfWeekToFirstOfMonth(displayedMonth, firstDayOfWeek)
     }
+    val debugSnackbar = remember {
+        SnackbarHostState()
+    }
 
-    var cellIndex = 0
     Column(
         modifier =
             Modifier
@@ -126,13 +149,15 @@ internal fun Month(
                 },
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        repeat(MAX_CALENDAR_ROWS) {
+        SnackbarHost(hostState = debugSnackbar)
+        repeat(MAX_CALENDAR_ROWS) { i ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                repeat(DAYS_IN_WEEK) {
+                repeat(DAYS_IN_WEEK) { j ->
+                    val cellIndex = i * DAYS_IN_WEEK + j
                     if (
                         cellIndex < daysFromStartOfWeekToFirstOfMonth ||
                         cellIndex >=
@@ -147,11 +172,26 @@ internal fun Month(
                                 )
                         )
                     } else {
-                        val dayNumber = cellIndex - daysFromStartOfWeekToFirstOfMonth + 1
-                        val date = displayedMonth.onDay(dayNumber)
-                        val isToday = date == today
+                        val dayNumber = remember(daysFromStartOfWeekToFirstOfMonth, cellIndex) {
+                            cellIndex - (daysFromStartOfWeekToFirstOfMonth - 1)
+                        }
+                        val date = remember(dayNumber) {
+                            displayedMonth.onDay(dayNumber)
+                        }
+
+                        val isToday = remember(date) {
+                            date == today
+                        }
                         val startDateSelected = date == startDate
                         val endDateSelected = date == endDate
+                        LaunchedEffect(date) {
+                            if (date == today) {
+                                debugSnackbar.showSnackbar("Days from week start: $daysFromStartOfWeekToFirstOfMonth")
+                                debugSnackbar.showSnackbar("Cell Index: $cellIndex")
+                                debugSnackbar.showSnackbar("Today value: $today")
+                                debugSnackbar.showSnackbar("Date value: $date")
+                            }
+                        }
                         val inRange =
                             if (rangeSelectionInfo != null && startDate != null && endDate != null) {
                                 remember(rangeSelectionInfo, date, startDate, endDate) {
@@ -205,7 +245,6 @@ internal fun Month(
                             dayNumber = dayNumber
                         )
                     }
-                    cellIndex++
                 }
             }
         }
@@ -245,7 +284,7 @@ internal fun HorizontalMonthsPagerMulti(
     colors: DatePickerColors
 ) {
     val today = remember {
-        Clock.System.now().toHijrahDate()
+        Clock.System.now().toHijrahDateTime(TimeZone.currentSystemDefault()).date
     }
 
     ProvideTextStyle(DatePickerModalTokens.DateLabelTextFont) {

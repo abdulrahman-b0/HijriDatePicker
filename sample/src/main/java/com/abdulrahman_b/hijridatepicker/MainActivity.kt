@@ -35,6 +35,7 @@ import com.abdulrahman_b.hijridatepicker.rangedatepicker.HijriDateRangePicker
 import com.abdulrahman_b.hijridatepicker.rangedatepicker.rememberHijriDateRangePickerState
 import com.abdulrahman_b.hijridatepicker.sample.R
 import com.abdulrahman_b.hijridatepicker.ui.theme.HijriDatePickerTheme
+import kotlinx.datetime.DayOfWeek
 import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
@@ -112,7 +113,7 @@ fun DatePickerFormSample(
                     )
                 },
             ) {
-                HijriDatePicker(state = datePickerState)
+                HijriDatePicker(state = datePickerState, firstDayOfWeek = DayOfWeek.SUNDAY)
             }
         }
 
