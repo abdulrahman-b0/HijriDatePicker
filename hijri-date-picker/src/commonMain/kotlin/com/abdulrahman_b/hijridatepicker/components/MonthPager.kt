@@ -41,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import com.abdulrahman_b.hijrahdatetime.HijrahDate
-import com.abdulrahman_b.hijrahdatetime.toHijrahDateTime
 import com.abdulrahman_b.hijrahdatetime.yearmonth.HijrahYearMonth
 import com.abdulrahman_b.hijridatepicker.HijriSelectableDates
 import com.abdulrahman_b.hijridatepicker.LocalFirstDayOfWeek
@@ -55,8 +54,6 @@ import com.abdulrahman_b.hijridatepicker.datepicker.RecommendedSizeForAccessibil
 import com.abdulrahman_b.hijridatepicker.rangedatepicker.SelectedRangeInfo
 import com.abdulrahman_b.hijridatepicker.rangedatepicker.drawRangeBackground
 import com.abdulrahman_b.hijridatepicker.tokens.DatePickerModalTokens
-import kotlinx.datetime.TimeZone
-import kotlin.time.Clock
 
 
 /** Composes a horizontal pageable list of months. */
@@ -64,6 +61,7 @@ import kotlin.time.Clock
 @Composable
 internal fun HorizontalMonthsPager(
     pagerState: PagerState,
+    today: HijrahDate,
     selectedDate: HijrahDate?,
     onDateSelectionChange: (date: HijrahDate) -> Unit,
     onDisplayedMonthChange: (month: HijrahYearMonth) -> Unit,
@@ -71,9 +69,6 @@ internal fun HorizontalMonthsPager(
     selectableDates: HijriSelectableDates,
     colors: DatePickerColors
 ) {
-    val today = remember {
-        Clock.System.now().toHijrahDateTime(TimeZone.currentSystemDefault()).date
-    }
 
     ProvideTextStyle(DatePickerModalTokens.DateLabelTextFont) {
         HorizontalPager(
@@ -276,6 +271,7 @@ internal fun Month(
 @Composable
 internal fun HorizontalMonthsPagerMulti(
     pagerState: PagerState,
+    today: HijrahDate,
     selectedDates: Set<HijrahDate>,
     onDateToggle: (date: HijrahDate) -> Unit,
     onDisplayedMonthChange: (month: HijrahYearMonth) -> Unit,
@@ -283,9 +279,6 @@ internal fun HorizontalMonthsPagerMulti(
     selectableDates: HijriSelectableDates,
     colors: DatePickerColors
 ) {
-    val today = remember {
-        Clock.System.now().toHijrahDateTime(TimeZone.currentSystemDefault()).date
-    }
 
     ProvideTextStyle(DatePickerModalTokens.DateLabelTextFont) {
         HorizontalPager(

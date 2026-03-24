@@ -462,6 +462,9 @@ private fun MultiDatePickerContent(
     colors: DatePickerColors
 ) {
     val dateFormatter = LocalPickerFormatter.current
+    val currentDate = remember {
+        Clock.System.now().toHijrahDateTime(TimeZone.currentSystemDefault()).date
+    }
 
     // For consistency with the single-date picker, we still animate between modes
     // even though multi-select currently only uses the calendar view.
@@ -513,6 +516,7 @@ private fun MultiDatePickerContent(
                             WeekDays(colors)
                             HorizontalMonthsPagerMulti(
                                 pagerState = monthPager,
+                                today = currentDate,
                                 selectedDates = selectedDates,
                                 onDateToggle = onDateToggle,
                                 onDisplayedMonthChange = onDisplayedMonthChange,
@@ -636,6 +640,7 @@ private fun DatePickerContent(
                 WeekDays(colors)
                 HorizontalMonthsPager(
                     pagerState = monthPager,
+                    today = currentDate,
                     selectedDate = selectedDate,
                     onDateSelectionChange = onDateSelectionChange,
                     onDisplayedMonthChange = onDisplayedMonthChange,
