@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.abdulrahman_b.hijrahdatetime.HijrahDateTimeFormat
+import com.abdulrahman_b.hijrahdatetime.format.HijrahDateTimeFormat
 import com.abdulrahman_b.hijridatepicker.datepicker.HijriDatePicker
 import com.abdulrahman_b.hijridatepicker.datepicker.HijriMultiDatePicker
 import com.abdulrahman_b.hijridatepicker.datepicker.rememberHijriDatePickerState
@@ -62,7 +62,7 @@ fun DatePickerFormSample(
     modifier: Modifier = Modifier
 ) {
     val formatter = remember {
-        HijrahDateTimeFormat.ofPattern("yyyy/MM/dd")
+        HijrahDateTimeFormat.of("yyyy/MM/dd")
     }
 
     Column(

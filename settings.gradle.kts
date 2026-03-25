@@ -25,5 +25,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "HijriDatePicker"
-include(":sample")
+include(":sample-android-app")
 include(":hijri-date-picker")
