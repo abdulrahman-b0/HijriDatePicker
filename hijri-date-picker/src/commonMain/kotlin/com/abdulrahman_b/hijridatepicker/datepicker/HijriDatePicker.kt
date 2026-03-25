@@ -86,6 +86,7 @@ import com.abdulrahman_b.hijridatepicker.LocalFirstDayOfWeek
 import com.abdulrahman_b.hijridatepicker.LocalPickerDecimalStyle
 import com.abdulrahman_b.hijridatepicker.LocalPickerFormatter
 import com.abdulrahman_b.hijridatepicker.LocalPickerLocale
+import com.abdulrahman_b.hijridatepicker.LocalTimeZone
 import com.abdulrahman_b.hijridatepicker.ProvideContentColorTextStyle
 import com.abdulrahman_b.hijridatepicker.calculatePageFromYearMonth
 import com.abdulrahman_b.hijridatepicker.calculateTotalPages
@@ -132,6 +133,8 @@ import kotlin.time.Clock
  *
  *   in different states. The default value is provided by [DatePickerDefaults.colors].
  * @param locale The locale used to format the date and day of weeks. The default value is the first locale in the current configuration.
+ * @param timeZone The time zone used to determine the current date. The default value is the system's default time zone. In most cases, this should be the time zone of the user's location.
+ * However, if you want to use a fixed time zone for debugging or something else, you can pass a [TimeZone] instance.
  * @param decimalStyle The [DecimalStyle] used to format the date. The default value is the decimal style of the provided locale.
  * But if you want the numbers to be in the style `012345679` always regardless of the locale, then you should pass [DecimalStyle.STANDARD]
  *
@@ -159,6 +162,9 @@ fun HijriDatePicker(
     },
     showModeToggle: Boolean = true,
     locale: FormatLocale = FormatLocales.getDefault(),
+    timeZone: TimeZone = remember { //Used for today value determinism
+        TimeZone.currentSystemDefault()
+    },
     decimalStyle: DecimalStyle = remember(locale) {
         DecimalStyle.OfLocale(locale)
     },
@@ -172,7 +178,8 @@ fun HijriDatePicker(
         LocalPickerDecimalStyle provides decimalStyle,
         LocalPickerFormatter provides dateFormatter,
         LocalFirstDayOfWeek provides firstDayOfWeek,
-        LocalDayOfWeekTextStyle provides dayOfWeekStyle
+        LocalDayOfWeekTextStyle provides dayOfWeekStyle,
+        LocalTimeZone provides timeZone,
     ) {
         DateEntryContainer(
             modifier = modifier,
@@ -267,6 +274,7 @@ fun HijriMultiDatePicker(
         DecimalStyle.OfLocale(locale)
     },
     colors: DatePickerColors = DatePickerDefaults.colors(),
+    timeZone: TimeZone = remember { TimeZone.currentSystemDefault() }
 ) {
     val selectableDates = state.selectableDates
 
@@ -275,7 +283,8 @@ fun HijriMultiDatePicker(
         LocalPickerDecimalStyle provides decimalStyle,
         LocalPickerFormatter provides dateFormatter,
         LocalFirstDayOfWeek provides firstDayOfWeek,
-        LocalDayOfWeekTextStyle provides dayOfWeekStyle
+        LocalDayOfWeekTextStyle provides dayOfWeekStyle,
+        LocalTimeZone provides timeZone,
     ) {
         DateEntryContainer(
             modifier = modifier,
@@ -593,8 +602,9 @@ private fun DatePickerContent(
     colors: DatePickerColors
 ) {
 
-    val currentDate = remember {
-        Clock.System.now().toHijrahDateTime(TimeZone.currentSystemDefault()).date
+    val timezone = LocalTimeZone.current
+    val currentDate = remember(timezone) {
+        Clock.System.now().toHijrahDateTime(timezone).date
     }
     val dateFormatter = LocalPickerFormatter.current
     val monthPager = rememberPagerState(

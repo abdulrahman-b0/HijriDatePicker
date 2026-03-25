@@ -59,6 +59,7 @@ import com.abdulrahman_b.hijridatepicker.LocalFirstDayOfWeek
 import com.abdulrahman_b.hijridatepicker.LocalPickerDecimalStyle
 import com.abdulrahman_b.hijridatepicker.LocalPickerFormatter
 import com.abdulrahman_b.hijridatepicker.LocalPickerLocale
+import com.abdulrahman_b.hijridatepicker.LocalTimeZone
 import com.abdulrahman_b.hijridatepicker.calculatePageFromYearMonth
 import com.abdulrahman_b.hijridatepicker.calculateTotalPages
 import com.abdulrahman_b.hijridatepicker.calculateYearMonthFromPage
@@ -80,7 +81,6 @@ import com.abdulrahman_b.hijridatepicker.tokens.DatePickerModalTokens
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 
@@ -283,8 +283,9 @@ private fun VerticalMonthsList(
     selectableDates: HijriSelectableDates,
     colors: DatePickerColors
 ) {
-    val today = remember {
-        Clock.System.now().toHijrahDateTime(TimeZone.currentSystemDefault()).date
+    val timeZone = LocalTimeZone.current
+    val today = remember(timeZone) {
+        Clock.System.now().toHijrahDateTime(timeZone).date
     }
     val dateFormatter = LocalPickerFormatter.current
     val firstDayOfWeek = LocalFirstDayOfWeek.current

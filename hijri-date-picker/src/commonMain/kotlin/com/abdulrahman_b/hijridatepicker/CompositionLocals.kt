@@ -7,6 +7,7 @@ import com.abdulrahman_b.hijrahdatetime.DecimalStyle
 import com.abdulrahman_b.hijrahdatetime.FormatLocale
 import com.abdulrahman_b.hijrahdatetime.format.NameStyle
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.TimeZone
 
 /**
  * A CompositionLocal used to provide a `Locale` for customizing locale-aware behavior in the
@@ -72,4 +73,8 @@ internal val LocalFirstDayOfWeek = staticCompositionLocalOf<DayOfWeek> {
  */
 internal val LocalDayOfWeekTextStyle = staticCompositionLocalOf<NameStyle> {
     error("No LocalDayOfWeekTextStyle provided")
+}
+
+internal val LocalTimeZone = staticCompositionLocalOf {
+    TimeZone.currentSystemDefault()
 }

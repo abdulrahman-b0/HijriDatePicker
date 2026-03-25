@@ -30,8 +30,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.DatePickerColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -124,9 +122,6 @@ internal fun Month(
     val daysFromStartOfWeekToFirstOfMonth = remember(displayedMonth) {
         calculateDaysFromStartOfWeekToFirstOfMonth(displayedMonth, firstDayOfWeek)
     }
-    val debugSnackbar = remember {
-        SnackbarHostState()
-    }
 
     Column(
         modifier =
@@ -144,7 +139,6 @@ internal fun Month(
                 },
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        SnackbarHost(hostState = debugSnackbar)
         repeat(MAX_CALENDAR_ROWS) { i ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -179,14 +173,6 @@ internal fun Month(
                         }
                         val startDateSelected = date == startDate
                         val endDateSelected = date == endDate
-                        LaunchedEffect(date) {
-                            if (date == today) {
-                                debugSnackbar.showSnackbar("Days from week start: $daysFromStartOfWeekToFirstOfMonth")
-                                debugSnackbar.showSnackbar("Cell Index: $cellIndex")
-                                debugSnackbar.showSnackbar("Today value: $today")
-                                debugSnackbar.showSnackbar("Date value: $date")
-                            }
-                        }
                         val inRange =
                             if (rangeSelectionInfo != null && startDate != null && endDate != null) {
                                 remember(rangeSelectionInfo, date, startDate, endDate) {
