@@ -1,10 +1,9 @@
 # Hijri Date Picker
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.1.0-purple.svg?logo=kotlin)]()
-[![Java](https://img.shields.io/badge/Java-11-orange.svg?logo=java)]()
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.3.20-purple.svg?logo=kotlin)]()
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg?logo=paypal)](https://www.paypal.com/paypalme/AbdulrahmanBahamel)
 
-A modern and customizable Hijri Date Picker for Android, built with Jetpack Compose and inspired by the Material3 Date Picker.
+A modern and customizable Hijri Date Picker for Compose Multiplatform. Inspired by the Material3 Date Picker.
 
 The **Hijri Date Picker** allows users to select dates in the **Hijri calendar** with ease. It's designed to be **simple, flexible, and customizable**, making it easy for developers to integrate into their apps. This library fills the gap for modern, high-quality date pickers with Hijri calendar support, providing a seamless experience for Muslim users.
 
@@ -72,7 +71,7 @@ Here’s how to set up the HijriDatePicker for selecting a single date:
 @Composable
 fun DatePickerExample() {
     val datePickerState = rememberHijriDatePickerState(
-        initialSelectedDate = HijrahDate.now(), // Default selected date (optional)
+        initialSelectedDate = Clock.System.now.toHijrahDateTime(TimeZone.currentSystemDefault()).date, // Default selected date (optional)
         selectableDates = HijriSelectableDates { date ->
             // Allow all dates, but customize this to restrict selectable dates
             true
@@ -89,7 +88,7 @@ fun DatePickerExample() {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        datePickerState.selectedDate?.let { date: HijrahDate ->
+                        datePickerState.selectedDate?.let { date: HijrahDate -> //HijrahDate from my other library (HijrahDateTime)
                             // Do something with the selected date
                         }
                         selectDateDialogOpen = false
@@ -238,7 +237,15 @@ Step 2: Add the library dependency:
 
 ```kotlin
 dependencies {
-    implementation("com.abdulrahman-b.hijridatepicker:hijridatepicker:1.1.2")
+    implementation("com.abdulrahman-b.hijridatepicker:hijridatepicker:2.0.0-alpha01")
+}
+```
+
+```kotlin Multiplatform
+kotlin {
+    commonMain.dependencies {
+        implementation("com.abdulrahman-b.hijridatepicker:hijridatepicker:2.0.0-alpha01")
+    }
 }
 ```
 
@@ -246,7 +253,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation "com.abdulrahman-b.hijridatepicker:hijridatepicker:1.1.2"
+    implementation "com.abdulrahman-b.hijridatepicker:hijridatepicker:2.0.0-alpha01"
 }
 ```
 

@@ -6,6 +6,6 @@ plugins {
     alias(libs.plugins.android.kotlinMultiplatform.library) apply false
 }
 
-rootProject.description  = "A modern and stylish Hijri Date Picker for Android, built with Jetpack Compose and inspired by the Material 3 Date Picker."
+rootProject.description  = "A modern and stylish Hijri Date Picker for Compose Multiplatform. Inspired by the Material 3 Date Picker."
 rootProject.group  = "com.abdulrahman-b.hijridatepicker"
-rootProject.version = "2.0.0-debug04"
+rootProject.version = "2.0.0-alpha01"
