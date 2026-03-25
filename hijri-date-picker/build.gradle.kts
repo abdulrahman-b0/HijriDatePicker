@@ -55,11 +55,11 @@ kotlin {
             implementation(libs.composeMultiplatform.ui)
             implementation(libs.composeMultiplatform.ui.graphics)
             implementation(libs.composeMultiplatform.ui.tooling.preview)
-            api(libs.composeMultiplatform.components.resources)
+            implementation(libs.composeMultiplatform.components.resources)
             implementation(libs.composeMultiplatform.material.iconsCore)
 
             implementation(libs.kotlinx.datetime)
-            api(libs.hijrahdatetime)
+            implementation(libs.hijrahdatetime)
 
         }
         val jvmCommonMain by creating {
