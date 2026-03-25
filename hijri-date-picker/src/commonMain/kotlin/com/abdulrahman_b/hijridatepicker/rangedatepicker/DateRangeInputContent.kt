@@ -29,8 +29,8 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.abdulrahman_b.hijrahdatetime.DecimalStyle
 import com.abdulrahman_b.hijrahdatetime.HijrahDate
+import com.abdulrahman_b.hijrahdatetime.format.DecimalStyle
 import com.abdulrahman_b.hijridatepicker.HijriSelectableDates
 import com.abdulrahman_b.hijridatepicker.LocalPickerLocale
 import com.abdulrahman_b.hijridatepicker.datepicker.DateInputFormat

@@ -1,9 +1,9 @@
 package com.abdulrahman_b.hijridatepicker
 
 import androidx.compose.material3.CalendarLocale
-import com.abdulrahman_b.hijrahdatetime.DecimalStyle
-import com.abdulrahman_b.hijrahdatetime.FormatLocale
-import com.abdulrahman_b.hijrahdatetime.FormatLocales
+import com.abdulrahman_b.hijrahdatetime.format.DecimalStyle
+import com.abdulrahman_b.hijrahdatetime.format.FormatLocale
+import com.abdulrahman_b.hijrahdatetime.format.FormatLocales
 
 actual fun Int.toLocalString(
     locale: FormatLocale,

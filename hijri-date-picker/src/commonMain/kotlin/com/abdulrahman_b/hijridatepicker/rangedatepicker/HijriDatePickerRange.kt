@@ -45,10 +45,10 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.abdulrahman_b.hijrahdatetime.DecimalStyle
-import com.abdulrahman_b.hijrahdatetime.FormatLocale
-import com.abdulrahman_b.hijrahdatetime.FormatLocales
 import com.abdulrahman_b.hijrahdatetime.HijrahDate
+import com.abdulrahman_b.hijrahdatetime.format.DecimalStyle
+import com.abdulrahman_b.hijrahdatetime.format.FormatLocale
+import com.abdulrahman_b.hijrahdatetime.format.FormatLocales
 import com.abdulrahman_b.hijrahdatetime.format.NameStyle
 import com.abdulrahman_b.hijrahdatetime.toHijrahDateTime
 import com.abdulrahman_b.hijrahdatetime.yearmonth.HijrahYearMonth

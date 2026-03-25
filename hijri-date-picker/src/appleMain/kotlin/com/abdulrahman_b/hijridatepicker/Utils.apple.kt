@@ -1,8 +1,8 @@
 package com.abdulrahman_b.hijridatepicker
 
 import androidx.compose.material3.CalendarLocale
-import com.abdulrahman_b.hijrahdatetime.DecimalStyle
-import com.abdulrahman_b.hijrahdatetime.FormatLocale
+import com.abdulrahman_b.hijrahdatetime.format.DecimalStyle
+import com.abdulrahman_b.hijrahdatetime.format.FormatLocale
 import platform.Foundation.NSNumber
 import platform.Foundation.NSNumberFormatter
 

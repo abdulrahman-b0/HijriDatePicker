@@ -3,8 +3,8 @@ package com.abdulrahman_b.hijridatepicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.abdulrahman_b.hijrahdatetime.DecimalStyle
-import com.abdulrahman_b.hijrahdatetime.FormatLocale
+import com.abdulrahman_b.hijrahdatetime.format.DecimalStyle
+import com.abdulrahman_b.hijrahdatetime.format.FormatLocale
 import com.abdulrahman_b.hijrahdatetime.format.NameStyle
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.TimeZone
