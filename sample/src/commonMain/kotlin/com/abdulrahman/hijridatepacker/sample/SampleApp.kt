@@ -53,7 +53,7 @@ fun SampleApp() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerFormSample(
+private fun DatePickerFormSample(
     modifier: Modifier = Modifier
 ) {
     val formatter = remember {
@@ -188,7 +188,7 @@ fun DatePickerFormSample(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HijriMultiDatePickerSection(
+private fun HijriMultiDatePickerSection(
     formatter: HijrahDateTimeFormat,
     modifier: Modifier = Modifier
 ) {
