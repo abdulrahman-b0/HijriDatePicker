@@ -37,19 +37,21 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-   kotlin {
-       compilerOptions {
-           jvmTarget = JvmTarget.JVM_17
-       }
-   }
+
     buildFeatures {
         compose = true
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+    }
+}
+
 dependencies {
 
-    implementation(project(":hijri-date-picker"))
+    implementation(project(":sample-shared"))
     implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

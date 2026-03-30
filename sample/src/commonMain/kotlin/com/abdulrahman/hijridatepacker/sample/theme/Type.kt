@@ -1,4 +1,4 @@
-package com.abdulrahman_b.hijridatepicker.ui.theme
+package com.abdulrahman.hijridatepacker.sample.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
