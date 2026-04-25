@@ -31,6 +31,7 @@ Text Input Variants (Arabic/English):
 
 ## Table of Contents
 
+- [Supported Platforms](#supported-platforms)
 - [Features](#features)
 - [Usage](#usage)
     - [Single Date Selection](#single-date-picker-dialog)
@@ -38,6 +39,15 @@ Text Input Variants (Arabic/English):
     - [Multi-Date Selection](#multi-date-picker)
 - [Installation](#installation)
 - [Support Me](#support-me)
+
+## Supported Platforms
+
+This library is built with **Compose Multiplatform** and supports the following targets:
+
+- **Android** (API 26+)
+- **JVM (11+)**
+- **iOS** (Arm64 & Simulator Arm64)
+- **macOS** (Arm64)
 
 ---
 
@@ -158,7 +168,7 @@ fun DateRangePickerExample() {
 
 ---
 
-### Multi-Date Picker (NEW)
+### Multi-Date Picker
 Here’s an example of how to implement a HijriMultiDatePicker for selecting multiple different dates:
 
 ```kotlin
@@ -215,12 +225,6 @@ fun MultiDatePickerExample() {
 
 ## Installation
 
-### Requirements
-
-- **Jetpack Compose** and **Material3** libraries.
-- Minimum SDK: **26**
-- JDK: **11 or above**
-
 ### Setup
 
 Step 1: Add the Maven Central repository (if not present):
@@ -246,14 +250,6 @@ kotlin {
     commonMain.dependencies {
         implementation("com.abdulrahman-b.hijridatepicker:hijridatepicker:2.0.0-alpha01")
     }
-}
-```
-
-#### Groovy DSL:
-
-```groovy
-dependencies {
-    implementation "com.abdulrahman-b.hijridatepicker:hijridatepicker:2.0.0-alpha01"
 }
 ```
 
