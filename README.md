@@ -4,9 +4,10 @@
 > **This library is deprecated and has been moved to a new artifact:**
 > `com.abdulrahman-b.hijrahdatetime:hijrahdatetime-compose-pickers:2.0.0-alpha07`
 >
+> Refer to the new [Github](https://github.com/abdulrahman-b0/HijrahDateTime) Repository.
 > Please migrate to the new artifact to continue receiving updates and new features.
 
-### Migration Guide
+ ### Migration Guide
 
 1. **Adjust base imports:**
    Change from: `com.abdulrahman_b.hijridatepicker.*`
