@@ -13,7 +13,7 @@
    To: `com.abdulrahman_b.hijrahdatetime.pickers.*`
 
 2. **Naming convention change:**
-   Replace `Hijri` with `Hijrah` for consistency. For example, `HijriDatePicker` -> `HijrahDatePicker`.
+   Replace `Hijri` with `Hijrah` for consistency with the `HijrahDate` model. For example, `HijriDatePicker` -> `HijrahDatePicker`.
 
 ---
 
