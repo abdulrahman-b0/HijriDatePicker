@@ -10,7 +10,7 @@
 
 1. **Adjust base imports:**
    Change from: `com.abdulrahman_b.hijridatepicker.*`
-   To: `com.abdulrahman-b.hijrahdatetime.pickers.*`
+   To: `com.abdulrahman_b.hijrahdatetime.pickers.*`
 
 2. **Naming convention change:**
    Replace `Hijri` with `Hijrah` for consistency. For example, `HijriDatePicker` -> `HijrahDatePicker`.
