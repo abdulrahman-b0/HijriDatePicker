@@ -1,5 +1,22 @@
 # Hijri Date Picker
 
+> [!CAUTION]
+> **This library is deprecated and has been moved to a new artifact:**
+> `com.abdulrahman-b.hijrahdatetime:hijrahdatetime-compose-pickers:2.0.0-alpha07`
+>
+> Please migrate to the new artifact to continue receiving updates and new features.
+
+### Migration Guide
+
+1. **Adjust base imports:**
+   Change from: `com.abdulrahman_b.hijridatepicker.*`
+   To: `com.abdulrahman-b.hijrahdatetime.pickers.*`
+
+2. **Naming convention change:**
+   Replace `Hijri` with `Hijrah` for consistency. For example, `HijriDatePicker` -> `HijrahDatePicker`.
+
+---
+
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.3.20-purple.svg?logo=kotlin)]()
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg?logo=paypal)](https://www.paypal.com/paypalme/AbdulrahmanBahamel)
 
